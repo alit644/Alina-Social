@@ -5,29 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import AnimatedBackground from "@/components/ui/AnimatedBackground";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/schema";
-import { LOGIN_INPUTS } from "@/data";
+import { registerSchema } from "@/schema";
+import { REGISTER_INPUST } from "@/data";
 import SocialLogin from "@/components/ui/SocialLogin";
 interface IFormInput {
+  name: string;
   email: string;
+  username: string;
   password: string;
 }
 
-const Login = () => {
+const Register = () => {
   const form = useForm<IFormInput>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(registerSchema),
   });
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 
 
 //! render Inputs
-const renderInputs = LOGIN_INPUTS.map((input) => (
+const renderInputs = REGISTER_INPUST.map((input) => (
   <FormItem key={input.id}>
     <FormControl>
       <Input
         placeholder={input.placeholder}
         type={input.type}
-        className="h-11"
+        className="h-10"
         {...form.register(input.name, input.validation)}
       />
     </FormControl>
@@ -40,9 +42,9 @@ const renderInputs = LOGIN_INPUTS.map((input) => (
     <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-900 via-black to-slate-800">
       <AnimatedBackground />
 
-      <div className="relative  flex flex-col h-full w-full items-center justify-center px-[20px]">
+      <div className="relative  flex flex-col h-full w-full items-center justify-center px-[20px] ">
         {/* content */}
-        <div className="w-full shadow-sm sm:w-[400px] flex flex-col items-center justify-center bg-white border-input p-4 rounded-md">
+        <div className="w-full shadow-sm sm:w-[400px] flex flex-col items-center justify-center bg-white  border-input p-4  rounded-md">
           <div className="w-full flex items-center justify-center gap-2 mb-6">
             <img
               loading="lazy"
@@ -61,27 +63,27 @@ const renderInputs = LOGIN_INPUTS.map((input) => (
                 {renderInputs}
                
                 <Button
-                  className="w-full h-11"
+                  className="w-full h-10"
                   type="submit"
                   variant={"neutral"}
-                  aria-label="Login"
+                  aria-label="Register"
                 >
-                  Login
+                  Register
                 </Button>
               </form>
             </Form>
           </section>
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            Don't have an account?{" "}
+          <p className="text-center text-sm text-muted-foreground mt-4">
+            Already have an account?{" "}
             <Link
-              to="/register"
+              to="/login"
               className="text-primary hover:underline"
-              aria-label="Register"
+              aria-label="Login"
             >
-              Register
+              Login
             </Link>
           </p>
-          <div className="w-full h-[1px] bg-input mt-6" />
+          <div className="w-full h-[1px] bg-input mt-4" />
           {/* SocialLogin */}
           <SocialLogin />
         </div>
@@ -90,4 +92,4 @@ const renderInputs = LOGIN_INPUTS.map((input) => (
   );
 };
 
-export default Login;
+export default Register;
