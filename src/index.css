@@ -1,0 +1,210 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* تفعيل الـ dark mode عبر إضافة class="dark" على <html> */
+@custom-variant dark (&:is(.dark *));
+
+/* Typography */
+.H1 {
+  @apply text-[30px] md:text-[40px]  font-semibold;
+}
+.H2 {
+  @apply text-[28px] md:text-[32px] font-bold;
+}
+.H3 {
+  @apply text-[24px] md:text-[24px] font-bold;
+}
+.H4 {
+  @apply text-[20px] md:text-[20px] font-semibold;
+}
+.H5 {
+  @apply text-[16px] font-medium;
+}
+.H6 {
+  @apply text-[14px]  font-medium;
+}
+
+/* — Body Paragraph */
+.p1 {
+  @apply text-[16px]/[1.5] font-normal text-neutral-500;
+}
+.p2 {
+  @apply text-[16px]/[1.7] font-medium text-neutral-700;
+}
+
+/* labels */
+.label1 {
+  @apply text-[12px] font-normal text-neutral-500;
+}
+.label2 {
+  @apply text-[12px] font-medium text-neutral-500;
+}
+
+:root {
+  /* Primary Colors */
+  --primary-100: #e1e2f8;
+  --primary-200: #c3c5f1;
+  --primary-300: #b4b7ed;
+  --primary-400: #a5a9e9;
+  --primary-500: #959ce5;
+  --primary-600: #858ee1;
+  --primary-700: #7381dd;
+  --primary-800: #6174d9;
+  --primary-900: #4c68d5;
+
+  /* Neutral Colors */
+  --neutral-50: #f8f8f9;
+  --neutral-100: #f1f1f3;
+  --neutral-200: #e0e0e3;
+  --neutral-300: #c2c2c6;
+  --neutral-400: #9e9ea5;
+  --neutral-500: #7a7a84;
+  --neutral-600: #5e5e66;
+  --neutral-700: #414148;
+  --neutral-800: #2a2a2f;
+  --neutral-900: #141416;
+
+  /* Success Colors */
+  --success-50: #e6f7e6;
+  --success-100: #ccefd0;
+  --success-200: #99e0a1;
+  --success-300: #66d071;
+  --success-400: #33c040;
+  --success-500: #00b010;
+
+  /* Danger Colors */
+  --danger-50: #ffe6e6;
+  --danger-100: #ffcccc;
+  --danger-200: #ff9999;
+  --danger-300: #ff6666;
+  --danger-400: #ff3333;
+  --danger-500: #ff0000;
+
+  /* Warning Colors */
+  --warning-50: #fff7e6;
+  --warning-100: #ffedcc;
+  --warning-200: #ffdb99;
+  --warning-300: #ffc966;
+  --warning-400: #ffb733;
+  --warning-500: #ffa500;
+
+  /* Existing Variables */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: var(--primary-900);
+  --test: var(--neutral-900);
+
+  --primary-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --secondary: var(--neutral-500);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: var(--danger-500);
+  --destructive-foreground: oklch(0.985 0 0);
+  --input: oklch(0.922 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: var(--primary-500);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --primary: var(--primary-500);
+  --primary-500: var(--primary-500);
+  --primary-foreground: oklch(0.205 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --ring: oklch(0.556 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: white;
+  --input: oklch(1 0 0 / 15%);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
