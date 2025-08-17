@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schema";
 import { LOGIN_INPUTS } from "@/data";
 import SocialLogin from "@/components/ui/SocialLogin";
-import Logo from "@/components/Logo";
+import Logo from "@/components/shared/Logo";
 interface IFormInput {
   email: string;
   password: string;

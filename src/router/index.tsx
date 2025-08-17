@@ -1,18 +1,31 @@
+import { lazy, type JSX, type LazyExoticComponent } from "react";
+import { Suspense } from "react";
 import { createBrowserRouter } from "react-router";
-import Home from "@/pages/Home";
-import Login from "@/pages/Auth/Login";
-import Register from "@/pages/Auth/Register";
+const Home = lazy(() => import("@/pages/Home"));
+const Login = lazy(() => import("@/pages/Auth/Login"));
+const Register = lazy(() => import("@/pages/Auth/Register"));
+import RootLayout from "@/pages/Layout/RootLayout";
+import PageLoader from "@/components/ui/PageLoader";
+const withSuspense = (Component: LazyExoticComponent<() => JSX.Element>) => (
+  <Suspense fallback={<PageLoader />}>{<Component />}</Suspense>
+);
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Home,
+    Component: RootLayout,
+    children: [
+      {
+        path: "/",
+        Component: () => withSuspense(Home),
+      },
+    ],
   },
   {
-   path:"/login",
-   Component: Login,
+    path: "/login",
+    Component: () => withSuspense(Login),
   },
   {
-    path:"/register",
-    Component: Register,
-   }
+    path: "/register",
+    Component: () => withSuspense(Register),
+  },
 ]);

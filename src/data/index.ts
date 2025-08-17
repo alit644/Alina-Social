@@ -1,4 +1,5 @@
 import type { ILoginInput, IRegisterInput } from "@/interfaces";
+import { Bell, Home, MessageSquare, User } from "lucide-react";
 
 export const LOGIN_INPUTS: ILoginInput[] = [
   {
@@ -69,4 +70,30 @@ export const REGISTER_INPUST: IRegisterInput[] = [
     max: 20,
   },
  }
+]
+export const SIDEBAR_ITEMS = [
+  {
+    id: "home",
+    name: "Home",
+    icon: Home,
+    to: "/",
+  },
+  {
+    id: "profile",
+    name: "Profile",
+    icon: User,
+    to: "/profile",
+  },
+  {
+    id: "messages",
+    name: "Messages",
+    icon: MessageSquare,
+    to: "/messages",
+  },
+  {
+    id: "notifications",
+    name: "Notifications",
+    icon: Bell,
+    to: "/notifications",
+  },
 ]
