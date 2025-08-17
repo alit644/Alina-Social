@@ -198,6 +198,16 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* grid */
+  --container-desktop: 1280px;
+  --container-tablet: 936px;
+
+  --gutter-desktop: 30px;
+  --gutter-tablet: 20px;
+  --gutter-mobile: 20px;
+
+  --margin: 12px;
 }
 
 @layer base {
@@ -207,4 +217,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.active {
+ color: var(--primary-800);
 }

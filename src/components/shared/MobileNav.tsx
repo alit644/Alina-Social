@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Home, Search, PlusCircle, Bell } from "lucide-react";
 import { Link } from "react-router";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import MAvatar from "./MAvatar";
 export function MobileNav() {
   return (
     <div className="fixed bottom-0 left-0 right-0  bg-background border-t sm:hidden">
@@ -57,10 +57,8 @@ export function MobileNav() {
             <NavigationMenuLink asChild>
               <Link to="/profile">
                 <Button variant="ghost" size="icon">
-                  <Avatar className="h-7 w-7">
-                    <AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                
+                  <MAvatar src="https://github.com/shadcn.png" name="CN" className="h-7 w-7" />
                 </Button>
               </Link>
             </NavigationMenuLink>
