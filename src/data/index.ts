@@ -1,4 +1,4 @@
-import type { ILoginInput } from "@/interfaces";
+import type { ILoginInput, IRegisterInput } from "@/interfaces";
 
 export const LOGIN_INPUTS: ILoginInput[] = [
   {
@@ -24,7 +24,7 @@ export const LOGIN_INPUTS: ILoginInput[] = [
   },
 ];
 
-export const REGISTER_INPUST: ILoginInput[] = [
+export const REGISTER_INPUST: IRegisterInput[] = [
  {
   id: "name",
   name: "name",

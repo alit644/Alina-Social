@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/schema";
 import { REGISTER_INPUST } from "@/data";
 import SocialLogin from "@/components/ui/SocialLogin";
+import Logo from "@/components/Logo";
 interface IFormInput {
   name: string;
   email: string;
@@ -21,38 +22,29 @@ const Register = () => {
   });
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 
-
-//! render Inputs
-const renderInputs = REGISTER_INPUST.map((input) => (
-  <FormItem key={input.id}>
-    <FormControl>
-      <Input
-        placeholder={input.placeholder}
-        type={input.type}
-        className="h-10"
-        {...form.register(input.name, input.validation)}
-      />
-    </FormControl>
-    <FormMessage>
-      {form.formState.errors[input.name]?.message}
-    </FormMessage>
-  </FormItem>
-)); 
+  //! render Inputs
+  const renderInputs = REGISTER_INPUST.map((input) => (
+    <FormItem key={input.id}>
+      <FormControl>
+        <Input
+          placeholder={input.placeholder}
+          type={input.type}
+          className="h-10"
+          {...form.register(input.name, input.validation)}
+        />
+      </FormControl>
+      <FormMessage>{form.formState.errors[input.name]?.message}</FormMessage>
+    </FormItem>
+  ));
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-900 via-black to-slate-800">
+    <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-50">
       <AnimatedBackground />
 
       <div className="relative  flex flex-col h-full w-full items-center justify-center px-[20px] ">
         {/* content */}
         <div className="w-full shadow-sm sm:w-[400px] flex flex-col items-center justify-center bg-white  border-input p-4  rounded-md">
-          <div className="w-full flex items-center justify-center gap-2 mb-6">
-            <img
-              loading="lazy"
-              src="/images/Logomark.svg"
-              alt="logo"
-              className="w-[40px] h-[40px]"
-            />
-            <h1 className="H3">Alina Social</h1>
+          <div className="w-full mb-6">
+            <Logo />
           </div>
           <section className="w-full space-y-4">
             <Form {...form}>
@@ -61,7 +53,7 @@ const renderInputs = REGISTER_INPUST.map((input) => (
                 className="w-full space-y-4"
               >
                 {renderInputs}
-               
+
                 <Button
                   className="w-full h-10"
                   type="submit"
