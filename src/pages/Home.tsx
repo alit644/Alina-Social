@@ -3,8 +3,10 @@ import PostCard from "@/components/post/PostCard";
 const Home = () => {
   return (
     <>
-        <AddPostCard />
+      <AddPostCard />
+      <div className="my-6">
         <PostCard />
+      </div>
     </>
   );
 };

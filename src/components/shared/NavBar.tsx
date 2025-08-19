@@ -2,10 +2,18 @@ import Logo from "@/components/shared/Logo";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/shared/MobileNav";
+import { Send } from "lucide-react";
+import { useAuthStore } from "@/store/Auth/useAuthStore";
+import { useCallback } from "react";
 const NavBar = () => {
+ const {logout} = useAuthStore()
+
+ const handleLogout = useCallback(() => {
+  logout()
+ }, [logout])
   return (
     <>
-      <nav className="bg-white border  border-input ">
+      <nav className="bg-white dark:bg-[#1E1E1E] border  border-input ">
         <div className="flex items-center justify-between p-4">
           <Logo />
           {/* Search */}
@@ -32,7 +40,7 @@ const NavBar = () => {
           </div>
           {/* Logout  */}
           <div className="hidden sm:flex items-center gap-1  ">
-            <Button variant="ghost" className="h-10">
+            <Button variant="ghost" className="h-10" onClick={handleLogout}>
               Logout
             </Button>
             <svg
@@ -53,28 +61,14 @@ const NavBar = () => {
           </div>
           {/* send icon */}
           <div className="flex sm:hidden items-center gap-1">
-            <Button variant="ghost" size={"icon"}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                className="main-grid-item-icon h-6 w-6 text-[var(--neutral-500)] hover:text-[var(--primary-900)] animate-pulse "
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              >
-                <line x1="22" x2="11" y1="2" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg>
+            <Button variant="ghost" size={"icon"} aria-label="Send">
+              <Send className="h-6 w-6 text-[var(--neutral-500)] hover:text-[var(--primary-900)] animate-pulse" />
             </Button>
           </div>
         </div>
       </nav>
-          {/* Mobile nav */}
-          <MobileNav />
+      {/* Mobile nav */}
+      <MobileNav />
     </>
   );
 };

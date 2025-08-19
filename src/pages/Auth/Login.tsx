@@ -9,16 +9,22 @@ import { loginSchema } from "@/schema";
 import { LOGIN_INPUTS } from "@/data";
 import SocialLogin from "@/components/ui/SocialLogin";
 import Logo from "@/components/shared/Logo";
+import { useAuthStore } from "@/store/Auth/useAuthStore";
+import { Loader } from "lucide-react";
 interface IFormInput {
   email: string;
   password: string;
 }
 
 const Login = () => {
+ const {signIn, isLoading} = useAuthStore()
   const form = useForm<IFormInput>({
     resolver: zodResolver(loginSchema),
   });
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+   await signIn(data)
+   
+  };
 
   //! render Inputs
   const renderInputs = LOGIN_INPUTS.map((input) => (
@@ -57,7 +63,9 @@ const Login = () => {
                   type="submit"
                   variant={"neutral"}
                   aria-label="Login"
+                  disabled={isLoading}
                 >
+                 {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
                   Login
                 </Button>
               </form>

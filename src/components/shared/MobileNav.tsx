@@ -10,7 +10,7 @@ import { Link } from "react-router";
 import MAvatar from "./MAvatar";
 export function MobileNav() {
   return (
-    <div className="fixed bottom-0 left-0 right-0  bg-background border-t sm:hidden">
+    <div className="fixed bottom-0 left-0 right-0   bg-background border-t sm:hidden">
       <NavigationMenu className="  w-full max-w-screen-sm ">
         <NavigationMenuList className="flex justify-between items-center p-2 max-w-full">
           <NavigationMenuItem > 
@@ -45,10 +45,10 @@ export function MobileNav() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link to="/reels">
+              <Link to="/notifications">
                 <Button variant="ghost" size="icon">
                   <Bell className="h-8 w-8" />
-                  <span className="sr-only">Reels</span>
+                  <span className="sr-only">Notifications</span>
                 </Button>
               </Link>
             </NavigationMenuLink>
@@ -56,7 +56,7 @@ export function MobileNav() {
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
               <Link to="/profile">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" aria-label="Profile">
                 
                   <MAvatar src="https://github.com/shadcn.png" name="CN" className="h-7 w-7" />
                 </Button>

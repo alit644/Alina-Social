@@ -8,7 +8,7 @@ const SuggestedFriendCard = () => {
        <CardTitle>Suggested Friends</CardTitle>
       </CardHeader>
       <CardContent>
-        <PostHeader name="Ali Talib" username="ali_talib" options={false} add={true} className="not-last:mb-5"/>
+        <PostHeader name="Ali Talib" username="ali_talib" options={false} add={true} className="not-last:mb-7"/>
       </CardContent>
     </Card>
   );

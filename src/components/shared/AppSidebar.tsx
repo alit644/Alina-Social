@@ -7,21 +7,29 @@ import {
 import { SIDEBAR_ITEMS } from "@/data";
 import MAvatar from "./MAvatar";
 import { NavLink } from "react-router";
+import { useAuthStore } from "@/store/Auth/useAuthStore";
 
 const AppSidebar = () => {
+const {userProfile}= useAuthStore()
   const sidebarItems = SIDEBAR_ITEMS.map((item) => {
     return (
       <SidebarMenuItem
         key={item.id}
         className="not-last:border-b border-input p-2"
       >
-        <SidebarMenuButton asChild>
+        <SidebarMenuButton className="" asChild>
           <NavLink
             to={item.to}
-            className="flex items-center flex-row gap-2 w-full"
+            className={({ isActive }) =>
+              `flex items-center gap-2 w-full ${
+                isActive
+                  ? "bg-blue-500 text-white rounded-md" 
+                  : "text-[var(--neutral-500)]"
+              }`
+            }
           >
-            <item.icon className="h-5 w-5" color="black" />
-            <span className="text-md text-[var(--neutral-900)]">
+            <item.icon className="h-5 w-5 text-[var(--neutral-500)] " />
+            <span className="text-md text-[var(--neutral-500)]">
               {item.name}
             </span>
           </NavLink>
@@ -41,14 +49,14 @@ const AppSidebar = () => {
             aria-label="banner"
           />
           <MAvatar
-            src="https://github.com/shadcn.png"
-            name="CN"
+            src={userProfile?.avatar_url}
+            name={userProfile?.username?.slice(0, 2).toUpperCase()}
             className="absolute bottom-[-20px] left-6 h-[50px] w-[50px]"
           />
         </section>
         <div className="text-start mt-2 p-4">
-          <h3 className="text-lg font-semibold">Robert Fox</h3>
-          <p className="text-sm text-gray-500">Software Engineer</p>
+          <h3 className="text-lg font-semibold">{userProfile?.username}</h3>
+          <p className="text-sm text-gray-500">{userProfile?.email?.split("@")[0]}</p>
         </div>
       </div>
       <SidebarProvider className="">

@@ -7,13 +7,15 @@ import MAvatar from "@/components/shared/MAvatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Images } from "lucide-react";
+import { useAuthStore } from "@/store/Auth/useAuthStore";
 const AddPostCard = () => {
+ const {userProfile} = useAuthStore()
   return (
       <Card className="shadow-none rounded-md">
         <CardHeader className="flex justify-between flex-row items-center gap-2">
           <MAvatar
-            src="https://github.com/shadcn.png"
-            name="CN"
+            src={userProfile?.avatar_url}
+            name={userProfile?.username?.slice(0, 2).toUpperCase()}
             className="size-10"
           />
           <Input

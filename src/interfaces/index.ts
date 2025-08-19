@@ -25,3 +25,14 @@ export interface IRegisterInput {
   };
 }
 
+export interface ISignUpData {
+  email: string;
+  password: string;
+  name: string;
+  username: string;
+}
+
+export interface ISignInData {
+  email: string;
+  password: string;
+}
