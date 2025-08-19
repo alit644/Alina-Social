@@ -26,18 +26,18 @@
 
 /* — Body Paragraph */
 .p1 {
-  @apply text-[16px]/[1.5] font-normal text-neutral-500;
+  @apply text-[16px]/[1.5] font-normal text-neutral-500 dark:text-neutral-300;
 }
 .p2 {
-  @apply text-[16px]/[1.7] font-medium text-neutral-700;
+  @apply text-[16px]/[1.7] font-medium text-neutral-700 dark:text-neutral-400;
 }
 
 /* labels */
 .label1 {
-  @apply text-[12px] font-normal text-neutral-500;
+  @apply text-[12px] font-normal text-neutral-500 dark:text-neutral-300;
 }
 .label2 {
-  @apply text-[12px] font-medium text-neutral-500;
+  @apply text-[12px] font-medium text-neutral-500 dark:text-neutral-400;
 }
 
 :root {
@@ -219,6 +219,6 @@
   }
 }
 
-.active {
- color: var(--primary-800);
+.active{
+ color: var(--neutral-900);
 }

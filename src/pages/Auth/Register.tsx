@@ -9,6 +9,8 @@ import { registerSchema } from "@/schema";
 import { REGISTER_INPUST } from "@/data";
 import SocialLogin from "@/components/ui/SocialLogin";
 import Logo from "@/components/shared/Logo";
+import { useAuthStore } from "@/store/Auth/useAuthStore";
+import { Loader } from "lucide-react";
 interface IFormInput {
   name: string;
   email: string;
@@ -17,10 +19,18 @@ interface IFormInput {
 }
 
 const Register = () => {
+
+  const { signUp, isLoading } = useAuthStore();
+
   const form = useForm<IFormInput>({
     resolver: zodResolver(registerSchema),
   });
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+   
+
+   await signUp(data);
+
+  };
 
   //! render Inputs
   const renderInputs = REGISTER_INPUST.map((input) => (
@@ -36,6 +46,7 @@ const Register = () => {
       <FormMessage>{form.formState.errors[input.name]?.message}</FormMessage>
     </FormItem>
   ));
+
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-50">
       <AnimatedBackground />
@@ -59,7 +70,9 @@ const Register = () => {
                   type="submit"
                   variant={"neutral"}
                   aria-label="Register"
+                  disabled={isLoading}
                 >
+                 {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
                   Register
                 </Button>
               </form>

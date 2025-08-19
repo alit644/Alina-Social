@@ -1,5 +1,5 @@
 import type { ILoginInput, IRegisterInput } from "@/interfaces";
-import { Bell, Home, MessageSquare, User } from "lucide-react";
+import { Bell, Bookmark, Home, LayoutGrid, Send, Settings, User } from "lucide-react";
 
 export const LOGIN_INPUTS: ILoginInput[] = [
   {
@@ -71,6 +71,35 @@ export const REGISTER_INPUST: IRegisterInput[] = [
   },
  }
 ]
+
+export const GENERAL_INPUTS = [
+ {
+   id: "fullname",
+   name: "fullname",
+   type: "text",
+   placeholder: "Full Name",
+   validation: {
+     required: "Full name is required",
+     min: 3,
+     max: 20,
+
+   },
+ },
+ {
+   id: "username",
+   name: "username",
+   type: "text",
+   placeholder: "User name",
+   validation: {
+     required: "User name is required",
+     min: 4,
+     max: 20,
+     pattern: /^[^@]+$/i,
+   },
+ },
+];
+
+
 export const SIDEBAR_ITEMS = [
   {
     id: "home",
@@ -87,7 +116,7 @@ export const SIDEBAR_ITEMS = [
   {
     id: "messages",
     name: "Messages",
-    icon: MessageSquare,
+    icon: Send,
     to: "/messages",
   },
   {
@@ -95,5 +124,26 @@ export const SIDEBAR_ITEMS = [
     name: "Notifications",
     icon: Bell,
     to: "/notifications",
+  },
+]
+
+export const PROFILE_ITEMS = [
+  {
+    id: "posts",
+    name: "My Posts",
+    icon: LayoutGrid,
+    to: "/profile",
+  },
+  {
+    id: "saved",
+    name: "Saved Posts",
+    icon: Bookmark,
+    to: "/profile/saved-post",
+  },
+  {
+    id: "settings",
+    name: "Settings",
+    icon: Settings,
+    to: "/profile/settings",
   },
 ]

@@ -16,8 +16,10 @@ const PostHeader = ({
   className = "",
 }: PostHeaderProps) => {
   return (
-    <article className={`flex   justify-between items-center gap-2 ${className}`}>
-      <div className="flex items-center gap-2">
+    <article
+      className={`flex   justify-between items-center gap-2 ${className}`}
+    >
+      <div className={`flex items-center gap-2 `}>
         <MAvatar
           src="https://github.com/shadcn.png"
           name={name}
