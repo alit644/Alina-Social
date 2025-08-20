@@ -242,9 +242,10 @@ export const useAuthStore = create<IAuthStore>((set) => ({
       const { error: upsertError } = await supabase.from("profiles").upsert(
         {
           id: session.user.id,
+          avatar_url: session.user.user_metadata?.avatar_url,
           email: session.user.email,
-          username: session.user.user_metadata?.name,
-          avatar_url: session.user.user_metadata?.picture,
+          full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
+          username: session.user.user_metadata?.username,
           created_at: new Date(),
         },
         { onConflict: "id" }

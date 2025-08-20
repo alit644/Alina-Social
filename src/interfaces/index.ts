@@ -25,6 +25,19 @@ export interface IRegisterInput {
   };
 }
 
+export interface IGeneralInput {
+  id: string;
+  name: "full_name" | "username";
+  type: "text" | "email" | "password";
+  placeholder: string;
+  validation: {
+    required?: string;
+    pattern?: RegExp;
+   min?: number;
+   max?: number;
+  };
+}
+
 export interface ISignUpData {
   email: string;
   password: string;
@@ -35,4 +48,13 @@ export interface ISignUpData {
 export interface ISignInData {
   email: string;
   password: string;
+}
+
+export interface IProfile {
+  id: string;
+  full_name: string;
+  username: string;
+  email: string;
+  bio: string;
+  avatar_url: string;
 }

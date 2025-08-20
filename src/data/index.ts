@@ -1,4 +1,4 @@
-import type { ILoginInput, IRegisterInput } from "@/interfaces";
+import type { IGeneralInput, ILoginInput, IRegisterInput } from "@/interfaces";
 import { Bell, Bookmark, Home, LayoutGrid, Send, Settings, User } from "lucide-react";
 
 export const LOGIN_INPUTS: ILoginInput[] = [
@@ -72,10 +72,10 @@ export const REGISTER_INPUST: IRegisterInput[] = [
  }
 ]
 
-export const GENERAL_INPUTS = [
+export const GENERAL_INPUTS: IGeneralInput[] = [
  {
    id: "fullname",
-   name: "fullname",
+   name: "full_name",
    type: "text",
    placeholder: "Full Name",
    validation: {

@@ -2,7 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { NavLink, Outlet } from "react-router";
 import { Separator } from "@/components/ui/separator";
+import { useAuthStore } from "@/store/Auth/useAuthStore";
 const Settings = () => {
+ const {logout} = useAuthStore()
+ // handle logout
+ const handleLogout = () => {
+  logout()
+ }
   return (
     <div className="">
       <Card className="shadow-none rounded-md gap-0 p-0 ">
@@ -28,6 +34,7 @@ const Settings = () => {
               <Button
                 variant="ghost"
                 className="text-[var(--neutral-600)] w-full"
+                onClick={handleLogout}
               >
                 Logout
               </Button>
