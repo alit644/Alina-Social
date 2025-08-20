@@ -5,17 +5,20 @@ import { MobileNav } from "@/components/shared/MobileNav";
 import { Send } from "lucide-react";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { useCallback } from "react";
+import { Link } from "react-router";
 const NavBar = () => {
- const {logout} = useAuthStore()
+  const { logout } = useAuthStore();
 
- const handleLogout = useCallback(() => {
-  logout()
- }, [logout])
+  const handleLogout = useCallback(() => {
+    logout();
+  }, [logout]);
   return (
     <>
       <nav className="bg-white dark:bg-[#1E1E1E] border  border-input ">
         <div className="flex items-center justify-between p-4">
-          <Logo />
+          <Link to="/">
+            <Logo />
+          </Link>
           {/* Search */}
           <div className="hidden sm:flex items-center gap-2 relative ">
             <Input

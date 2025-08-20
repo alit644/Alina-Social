@@ -55,8 +55,8 @@ const {userProfile}= useAuthStore()
           />
         </section>
         <div className="text-start mt-2 p-4">
-          <h3 className="text-lg font-semibold">{userProfile?.username}</h3>
-          <p className="text-sm text-gray-500">{userProfile?.email?.split("@")[0]}</p>
+          <h3 className="text-lg font-semibold">{userProfile?.full_name}</h3>
+          <p className="text-sm text-gray-500">@{userProfile?.username}</p>
         </div>
       </div>
       <SidebarProvider className="">

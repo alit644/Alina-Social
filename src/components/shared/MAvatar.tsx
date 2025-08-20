@@ -7,7 +7,7 @@ interface MAvatarProps {
 const MAvatar = ({src, name, className = "h-[50px] w-[50px]" }: MAvatarProps) => {
  return (
    <Avatar className={`${className} `}>
-    <AvatarImage src={src} />
+    <AvatarImage src={src ||"https://avatar.iran.liara.run/public/41"} alt={name} />
     <AvatarFallback>{name}</AvatarFallback>
    </Avatar>
  );
