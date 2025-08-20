@@ -58,3 +58,16 @@ export interface IProfile {
   bio: string;
   avatar_url: string;
 }
+
+export interface IPost {
+    id: string;
+    content: string;
+    image_url: string;
+    user_id: string;
+    created_at: string;
+    profiles?: {
+      avatar_url: string;
+      full_name: string;
+      username: string;
+    };
+}

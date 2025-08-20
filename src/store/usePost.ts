@@ -1,0 +1,174 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IPost } from "@/interfaces";
+import { create } from "zustand";
+import { useAuthStore } from "./Auth/useAuthStore";
+import supabase from "@/supabase";
+import { toast } from "sonner";
+interface IUsePost {
+  posts: IPost[];
+  isLoading: boolean;
+  error: string | null;
+  createPost: (data: {
+    content: string;
+    image_url?: string | File;
+  }) => Promise<{ content: string; image_url?: string | File } | undefined>;
+  getUserPosts: () => Promise<IPost[] | undefined>;
+  getAllPosts: () => Promise<IPost[] | undefined>;
+}
+export const usePostStore = create<IUsePost>((set) => ({
+  posts: [] as IPost[],
+  isLoading: false,
+  error: null,
+  //Create Post
+  createPost: async (data) => {
+    set({ isLoading: true, error: null });
+    try {
+      let publicUrl = data.image_url;
+      if (data.image_url instanceof File) {
+        const fileName = `${useAuthStore.getState().user?.id}/${Date.now()}_${
+          data.image_url.name
+        }`;
+        const { error: uploadError } = await supabase.storage
+          .from("post-image")
+          .upload(fileName, data.image_url, {
+            upsert: true,
+          });
+        if (uploadError) {
+          set({ error: "Error Create Post", isLoading: false });
+          toast.error("Error Create Post", {
+            style: {
+              background: "var(--danger-300)",
+              border: "1px solid var(--danger-500)",
+              color: "#fff",
+            },
+            description: uploadError?.message || "Something went wrong",
+            duration: 5000,
+          });
+          throw uploadError;
+        }
+        const { data: publicUrlData } = supabase.storage
+          .from("post-image")
+          .getPublicUrl(fileName);
+        publicUrl = publicUrlData.publicUrl;
+      }
+
+      const { data: postData, error } = await supabase
+        .from("posts")
+        .insert({
+          content: data.content,
+          image_url: publicUrl,
+          user_id: useAuthStore.getState().user?.id,
+        })
+        .single();
+      if (error) {
+        set({ error: "Error Create Post", isLoading: false });
+        toast.error("Error Create Post", {
+          style: {
+            background: "var(--danger-300)",
+            border: "1px solid var(--danger-500)",
+            color: "#fff",
+          },
+          description: error?.message || "Something went wrong",
+          duration: 5000,
+        });
+        throw error;
+      }
+
+      set({ posts: [postData], isLoading: false, error: null });
+      toast.success("Post Successfully Created", {
+        style: {
+          background: "var(--success-300)",
+          border: "1px solid var(--success-500)",
+          color: "#fff",
+        },
+        duration: 5000,
+      });
+      return data;
+    } catch (error: any) {
+      console.log(error);
+      set({ error: error as string, isLoading: false });
+      toast.error("Error Create Post", {
+        style: {
+          background: "var(--danger-300)",
+          border: "1px solid var(--danger-500)",
+          color: "#fff",
+        },
+        description: "Something went wrong",
+        duration: 5000,
+      });
+    }
+  },
+  getUserPosts: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("user_id", useAuthStore.getState().user?.id)
+        .limit(10)
+        .order("created_at", { ascending: false });
+      if (error) {
+        set({ error: "Error Get User Posts", isLoading: false });
+        toast.error("Error Get User Posts", {
+          style: {
+            background: "var(--danger-300)",
+            border: "1px solid var(--danger-500)",
+            color: "#fff",
+          },
+          description: "Something went wrong",
+          duration: 5000,
+        });
+        throw error;
+      }
+      set({ posts: data, isLoading: false, error: null });
+      return data;
+    } catch (error) {
+      set({ error: error as string, isLoading: false });
+      toast.error("Error Get User Posts", {
+        style: {
+          background: "var(--danger-300)",
+          border: "1px solid var(--danger-500)",
+          color: "#fff",
+        },
+        description: "Something went wrong",
+        duration: 5000,
+      });
+    }
+  },
+  getAllPosts: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data, error } = await supabase
+        .from("posts")
+        .select('*, profiles!fk_user (avatar_url, full_name, username)')
+        .limit(10)
+        .order("created_at", { ascending: false });
+      if (error) {
+        set({ error: "Error Get All Posts", isLoading: false });
+        toast.error("Error Get All Posts", {
+          style: {
+            background: "var(--danger-300)",
+            border: "1px solid var(--danger-500)",
+            color: "#fff",
+          },
+          description: "Something went wrong",
+          duration: 5000,
+        });
+        throw error;
+      }
+      set({ posts: data, isLoading: false, error: null });
+      return data;
+    } catch (error) {
+      set({ error: error as string, isLoading: false });
+      toast.error("Error Get User Posts", {
+        style: {
+          background: "var(--danger-300)",
+          border: "1px solid var(--danger-500)",
+          color: "#fff",
+        },
+        description: "Something went wrong",
+        duration: 5000,
+      });
+    }
+  },
+}));

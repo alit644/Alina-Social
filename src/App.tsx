@@ -9,6 +9,10 @@ function App() {
   useEffect(() => {
     fetchUser();
     getUserProfile();
+    return () => {
+      // un subscribe
+      
+    }
   }, [fetchUser, getUserProfile]);
 
   if (isLoading) return <PageLoader />;
