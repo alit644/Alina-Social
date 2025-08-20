@@ -27,12 +27,15 @@ const General = () => {
   const queryClient = useQueryClient();
   //TODO: اضافاة disabled في حال لم تتم تغير الداتا
   // get user profile
-  const { data: profileData, isLoading: profileLoading, } = useQuery({
+  const { data: profileData, isLoading: profileLoading } = useQuery({
     queryKey: ["profile", userProfile?.id],
     queryFn: async () => {
       const data = await getUserProfile(userProfile?.id || "");
       return data;
     },
+    refetchOnWindowFocus: false,
+    staleTime: 60 * 60 * 2,
+    refetchInterval: 60 * 60 * 2,
   });
   const onSubmit: SubmitHandler<IGeneral> = async (data) => {
     try {
@@ -59,7 +62,6 @@ const General = () => {
       form.setValue("bio", profileData.bio || "");
       form.setValue("avatar", profileData.avatar_url || "");
     }
-    
   }, [profileData, form]);
 
   const resetDefaultImage = useCallback(() => {
@@ -80,6 +82,7 @@ const General = () => {
       <FormMessage>{form.formState.errors[input.name]?.message}</FormMessage>
     </FormItem>
   ));
+  //TODO: في حال تغير صورة لا يزال الزر يبقى غير مفعل
 
   if (profileLoading) return <PageLoader />;
   return (
@@ -126,7 +129,11 @@ const General = () => {
               src={
                 form.watch("avatar") && form.watch("avatar") instanceof File
                   ? URL.createObjectURL(form.watch("avatar") as File)
-                  : `${profileData?.avatar_url === null ? "https://avatar.iran.liara.run/public/41" : profileData?.avatar_url}`
+                  : `${
+                      profileData?.avatar_url === null
+                        ? "https://avatar.iran.liara.run/public/41"
+                        : profileData?.avatar_url
+                    }`
               }
               alt="profile avatar"
               aria-label="avatar"
@@ -158,18 +165,18 @@ const General = () => {
             </FormControl>
             <FormMessage>{form.formState.errors.bio?.message}</FormMessage>
           </FormItem>
-
+              
           <Button
             className="w-fit h-11"
             type="submit"
             variant={"neutral"}
             aria-label="Login"
             disabled={
-             isLoading ||
-             form.formState.isSubmitting ||
+              isLoading ||
+              form.formState.isSubmitting ||
               !form.formState.isDirty
-             }
-             title={!form.formState.isDirty ? "No changes to save" : undefined}
+            }
+            title={!form.formState.isDirty ? "No changes to save" : undefined}
           >
             {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
             {form.formState.isDirty ? "Save Changes" : "No changes to save"}
