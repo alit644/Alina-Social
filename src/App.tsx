@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { useEffect } from "react";
 import PageLoader from "./components/ui/PageLoader";
 import { AuthContextProvider } from "./context/AuthProvider";
+import MAlertDialog from "@/components/shared/MAlertDialog";
 function App() {
   const { fetchUser, isLoading, getUserProfile } = useAuthStore();
   useEffect(() => {
@@ -11,7 +12,6 @@ function App() {
     getUserProfile();
     return () => {
       // un subscribe
-      
     }
   }, [fetchUser, getUserProfile]);
 
@@ -21,6 +21,7 @@ function App() {
     <>
       <AuthContextProvider>
         <RouterProvider router={router} />
+        <MAlertDialog />
       </AuthContextProvider>
     </>
   );

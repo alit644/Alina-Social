@@ -1,28 +1,26 @@
 import MAvatar from "@/components/shared/MAvatar";
 import { Button } from "@/components/ui/button";
-import { Plus, Ellipsis } from "lucide-react";
-import { useAuthStore } from "@/store/Auth/useAuthStore";
+import { Plus } from "lucide-react";
 interface PostHeaderProps {
   createdAt: string;
-  options?: boolean;
   add?: boolean;
   className?: string;
   name?: string;
   userName?: string;
   avatar?: string;
+  userID?: string;
   postID?: string;
+  children?: React.ReactNode;
 }
 const PostHeader = ({
   createdAt,
-  options = true,
   add = false,
   className = "",
   name,
   userName,
   avatar,
-  postID,
+  children,
 }: PostHeaderProps) => {
- const {user} = useAuthStore()
   return (
     <article
       className={`flex   justify-between items-center gap-2 ${className}`}
@@ -36,18 +34,12 @@ const PostHeader = ({
       </div>
       {/* options */}
       <div className="flex flex-col items-end">
-        {options &&  (
-          <>
-          {
-            user?.id === postID && (
-            <Button variant="ghost" size="icon" className="text-end">
-              <Ellipsis className="h-5 w-5 text-[var(--neutral-500)]" />
-            </Button>
-           )
-          }
-            <p className="text-[var(--neutral-400)]">{createdAt?.split("T")[0]}</p>
-          </>
-        )}
+        <>
+         {children}
+          <p className="text-[var(--neutral-400)]">
+            {createdAt?.split("T")[0]}
+          </p>
+        </>
         {add && (
           <Button
             variant="ghost"

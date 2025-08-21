@@ -3,10 +3,15 @@ import { usePostStore } from "@/store/usePost";
 import { useQuery } from "@tanstack/react-query";
 import PageLoader from "@/components/ui/PageLoader";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
-
+import { Button } from "@/components/ui/button";
+import { Ellipsis } from "lucide-react";
+import { useAlertDialogStore } from "@/store/useAlertDialog";
+import { useCallback } from "react";
+import { MDropddownMenu } from "@/components/shared/MDropddownMenu";
 const MyPosts = () => {
   const { getUserPosts, isLoading } = usePostStore();
   const { userProfile } = useAuthStore();
+  const { setAlertPostId } = useAlertDialogStore();
   const { data, error } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
@@ -14,11 +19,18 @@ const MyPosts = () => {
       return data;
     },
     refetchOnWindowFocus: false,
-    staleTime:  1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5,
     refetchInterval: 1000 * 60 * 5,
-    
   });
-  if(data?.length === 0) return <div>No Posts</div>
+
+  const openDropdown = useCallback(
+    (postID: string) => {
+      setAlertPostId(postID);
+    },
+    [setAlertPostId]
+  );
+
+  if (data?.length === 0) return <div>No Posts</div>;
   const renderUserPost = data?.map((post) => (
     <PostCard
       key={post.id}
@@ -28,9 +40,24 @@ const MyPosts = () => {
       userName={userProfile?.username || ""}
       avatar={userProfile?.avatar_url || ""}
       name={userProfile?.full_name || ""}
-      postID={post.user_id}
-    />
+      postID={post.id}
+    >
+      <MDropddownMenu
+        onEdit={() => console.log("Edit post", post.id)}
+        postId={post.id}
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-end"
+          onClick={() => openDropdown(post.id)}
+        >
+          <Ellipsis className="h-5 w-5 text-[var(--neutral-500)]" />
+        </Button>
+      </MDropddownMenu>
+    </PostCard>
   ));
+
   if (isLoading) return <PageLoader />;
   if (error) return <div>{error.message}</div>;
   return <>{renderUserPost}</>;
