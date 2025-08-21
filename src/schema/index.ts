@@ -65,5 +65,5 @@ export const addPostSchema = z.object({
     .string()
     .min(5, { message: "Post must be at least 5 characters long" })
     .max(300, { message: "Post must be at most 200 characters long" }),
-  postImage: z.union([z.instanceof(File), z.string()]).optional(),
+  postImage: z.union([z.instanceof(File), z.string(), z.null()]).optional(),
 });

@@ -8,6 +8,7 @@ const PostContent = ({ content, image_url }: IPostContent) => {
       <p className="p2">{content}</p>
       {image_url && (
         <img
+        loading="lazy"
           src={`${image_url}`}
           alt="Post main Image "
           className="w-full rounded-md max-h-[400px] object-cover"

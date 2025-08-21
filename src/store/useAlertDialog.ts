@@ -4,6 +4,8 @@ interface IAlertDialog {
   setOpenPostId: (id: string | null) => void;
   alertPostId: string | null;
   setAlertPostId: (id: string | null) => void;
+  openDialogId: string | null;
+  setOpenDialogId: (id: string | null) => void;
 }
 
 export const useAlertDialogStore = create<IAlertDialog>((set) => ({
@@ -11,4 +13,6 @@ export const useAlertDialogStore = create<IAlertDialog>((set) => ({
   setOpenPostId: (id) => set({ openPostId: id }),
   alertPostId: null,
   setAlertPostId: (id) => set({ alertPostId: id }),
+  openDialogId: null,
+  setOpenDialogId: (id) => set({ openDialogId: id }),
 }));
