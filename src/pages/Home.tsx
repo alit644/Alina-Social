@@ -8,8 +8,8 @@ const Home = () => {
   //TODO: create new Post 1 part(one)      Done
   //TODO: get all posts 2 part(one)        Done
   //TODO: get only user posts 3 part(one)  Done
-  //TODO: edit user post 4 part(one)
-  //TODO: delete user post 5 part(one)
+  //TODO: edit user post 4 part(one)       Done 1 TODO
+  //TODO: delete user post 5 part(one)     Done
   //!=====================================
   //TODO: like post 6 part(two) Realtime
   //TODO: unlike post 7 part(two) Realtime

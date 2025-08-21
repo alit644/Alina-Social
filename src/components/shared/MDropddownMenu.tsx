@@ -12,15 +12,14 @@ import { useAlertDialogStore } from "@/store/useAlertDialog";
 interface MDropdownMenuProps {
   postId: string;
   children: React.ReactNode;
-  onEdit?: () => void;
 }
 
 export const MDropddownMenu: React.FC<MDropdownMenuProps> = ({
   postId,
   children,
-  onEdit,
 }) => {
-  const { openPostId, setOpenPostId, setAlertPostId } = useAlertDialogStore();
+  const { openPostId, setOpenPostId, setAlertPostId, setOpenDialogId } =
+    useAlertDialogStore();
 
   return (
     <DropdownMenu
@@ -29,7 +28,9 @@ export const MDropddownMenu: React.FC<MDropdownMenuProps> = ({
     >
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuItem onClick={onEdit}>Edit</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setOpenDialogId(postId)}>
+          Edit
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setAlertPostId(postId)}
           className="text-red-500"

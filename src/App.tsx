@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import PageLoader from "./components/ui/PageLoader";
 import { AuthContextProvider } from "./context/AuthProvider";
 import MAlertDialog from "@/components/shared/MAlertDialog";
+import {MDialog} from "@/components/shared/MDialog";
 function App() {
   const { fetchUser, isLoading, getUserProfile } = useAuthStore();
   useEffect(() => {
@@ -22,6 +23,7 @@ function App() {
       <AuthContextProvider>
         <RouterProvider router={router} />
         <MAlertDialog />
+        <MDialog />
       </AuthContextProvider>
     </>
   );

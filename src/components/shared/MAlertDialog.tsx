@@ -27,7 +27,7 @@ const MAlertDialog = () => {
     queryClient.invalidateQueries({ queryKey: ["posts"] });
   };
   return (
-    <AlertDialog open={alertPostId !== null}>
+    <AlertDialog open={alertPostId !== null} >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
