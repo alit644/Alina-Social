@@ -14,7 +14,10 @@ interface IPostCard {
   name?: string;
   userName?: string;
   avatar?: string;
+  userID?: string;
   postID?: string;
+  children?: React.ReactNode
+  
 }
 const PostCard = ({
   createdAt,
@@ -23,12 +26,14 @@ const PostCard = ({
   name,
   userName,
   avatar,
+  userID,
   postID,
+  children
 }: IPostCard) => {
   return (
     <Card className="mb-6  shadow-none rounded-md">
       <CardHeader className="pb-0  border-b border-input">
-        <PostHeader  createdAt={createdAt} name={name} userName={userName} avatar={avatar} postID={postID} />
+        <PostHeader  createdAt={createdAt} name={name} userName={userName} avatar={avatar} userID={userID} postID={postID} children={children}/>
       </CardHeader>
       <CardContent className="flex flex-col gap-6  ">
         <PostContent content={content} image_url={image_url}/>

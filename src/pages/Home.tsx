@@ -4,7 +4,6 @@ import PageLoader from "@/components/ui/PageLoader";
 import type { IPost } from "@/interfaces";
 import { usePostStore } from "@/store/usePost";
 import { useQuery } from "@tanstack/react-query";
-
 const Home = () => {
   //TODO: create new Post 1 part(one)      Done
   //TODO: get all posts 2 part(one)        Done
@@ -35,7 +34,7 @@ const Home = () => {
       return data;
     },
     refetchOnWindowFocus: false,
-    staleTime:  1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5,
     refetchInterval: 1000 * 60 * 5,
   });
   const renderPost = data?.map((post: IPost) => {
@@ -48,10 +47,12 @@ const Home = () => {
         userName={post.profiles?.username || ""}
         avatar={post.profiles?.avatar_url || ""}
         name={post.profiles?.full_name || ""}
-        postID={post.user_id}
+        userID={post.user_id}
+        postID={post.id}
       />
     );
   });
+
 
   if (isLoading) return <PageLoader />;
   if (error) return <div>{error.message}</div>;
@@ -59,6 +60,7 @@ const Home = () => {
     <>
       <AddPostCard />
       <div className="my-6">{renderPost}</div>
+      
     </>
   );
 };
