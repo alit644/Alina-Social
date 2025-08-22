@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   Card,
   CardContent,
@@ -17,6 +18,7 @@ interface IPostCard {
   userID?: string;
   postID?: string;
   children?: React.ReactNode
+
   
 }
 const PostCard = ({
@@ -39,11 +41,11 @@ const PostCard = ({
         <PostContent content={content} image_url={image_url}/>
       </CardContent>
       <CardFooter className="flex flex-col">
-        <PostFooter />
+        <PostFooter postID={postID || ""} userID={userID || ""}/>
         {/* <CommentCard /> */}
       </CardFooter>
     </Card>
   );
 };
 
-export default PostCard;
+export default memo(PostCard);

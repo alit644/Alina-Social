@@ -1,6 +1,7 @@
 import MAvatar from "@/components/shared/MAvatar";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { memo } from "react";
 interface PostHeaderProps {
   createdAt: string;
   add?: boolean;
@@ -54,4 +55,4 @@ const PostHeader = ({
   );
 };
 
-export default PostHeader;
+export default memo(PostHeader);

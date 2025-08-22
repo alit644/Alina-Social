@@ -20,6 +20,7 @@ interface IUsePost {
     postID: string,
     data: { content: string; image_url?: string | File | null }
   ) => Promise<IPost | undefined>;
+  toggelLike: (postID: string) => Promise<void>;
 }
 export const usePostStore = create<IUsePost>((set) => ({
   posts: [] as IPost[],
@@ -262,63 +263,67 @@ export const usePostStore = create<IUsePost>((set) => ({
   ) => {
     set({ isLoading: true, error: null });
     try {
+      if (data.image_url instanceof File) {
+        const fileName = `${useAuthStore.getState().user?.id}/${Date.now()}_${
+          data.image_url.name
+        }`;
+        const { error: uploadError } = await supabase.storage
+          .from("post-image")
+          .upload(fileName, data.image_url, {
+            upsert: true,
+          });
+        if (uploadError) {
+          set({ error: "Error Create Post", isLoading: false });
+          toast.error("Error Create Post", {
+            style: {
+              background: "var(--danger-300)",
+              border: "1px solid var(--danger-500)",
+              color: "#fff",
+            },
+            description: uploadError?.message || "Something went wrong",
+            duration: 5000,
+          });
+          throw uploadError;
+        }
+        const { data: publicUrlData } = supabase.storage
+          .from("post-image")
+          .getPublicUrl(fileName);
+        data.image_url = publicUrlData.publicUrl;
+      }
 
-     if(data.image_url instanceof File){
-       const fileName = `${useAuthStore.getState().user?.id}/${Date.now()}_${
-         data.image_url.name
-       }`;
-       const { error: uploadError } = await supabase.storage
-         .from("post-image")
-         .upload(fileName, data.image_url, {
-           upsert: true,
-         });
-       if (uploadError) {
-         set({ error: "Error Create Post", isLoading: false });
-         toast.error("Error Create Post", {
-           style: {
-             background: "var(--danger-300)",
-             border: "1px solid var(--danger-500)",
-             color: "#fff",
-           },
-           description: uploadError?.message || "Something went wrong",
-           duration: 5000,
-         });
-         throw uploadError;
-       }
-       const { data: publicUrlData } = supabase.storage
-         .from("post-image")
-         .getPublicUrl(fileName);
-       data.image_url = publicUrlData.publicUrl;
-     }
-
-     const {data: updateData, error: updateError} = await supabase.from("posts").update({
-      content: data.content,
-      image_url: data.image_url,
-     }).eq("id", postID).select("*").single()
-     if(updateError){
-      set({error: "Error Update Post", isLoading: false})
-      toast.error("Error Update Post", {
+      const { data: updateData, error: updateError } = await supabase
+        .from("posts")
+        .update({
+          content: data.content,
+          image_url: data.image_url,
+        })
+        .eq("id", postID)
+        .select("*")
+        .single();
+      if (updateError) {
+        set({ error: "Error Update Post", isLoading: false });
+        toast.error("Error Update Post", {
+          style: {
+            background: "var(--danger-300)",
+            border: "1px solid var(--danger-500)",
+            color: "#fff",
+          },
+          description: "Something went wrong",
+          duration: 5000,
+        });
+        throw updateError;
+      }
+      toast.success("Post Successfully Updated", {
         style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
+          background: "var(--success-300)",
+          border: "1px solid var(--success-500)",
           color: "#fff",
         },
-        description: "Something went wrong",
-        duration: 5000,
-      })
-      throw updateError
-     }
-     toast.success("Post Successfully Updated", {
-      style: {
-        background: "var(--success-300)",
-        border: "1px solid var(--success-500)",
-        color: "#fff",
-      },
-      duration: 3000,
-     })
-     set({ posts: updateData, isLoading: false, error: null });
+        duration: 3000,
+      });
+      set({ posts: updateData, isLoading: false, error: null });
 
-     return updateData || null
+      return updateData || null;
     } catch (error: any) {
       console.log(error);
       set({ error: error as string, isLoading: false });
@@ -331,6 +336,89 @@ export const usePostStore = create<IUsePost>((set) => ({
         description: "Something went wrong",
         duration: 5000,
       });
+    }
+  },
+  toggelLike: async (postID: string) => {
+    set({ isLoading: true, error: null });
+    const {user} = useAuthStore.getState()
+    try {
+      const { data: existingLike } = await supabase
+        .from("likes")
+        .select("*")
+        .eq("post_id", postID)
+        .eq("user_id", user?.id);
+        console.log("existingLike", existingLike);
+        if(existingLike){
+          console.log("existing Like ", existingLike);
+          //  await supabase
+          // .from("likes")
+          // .delete()
+          // .eq("post_id", postID)
+          // .eq("user_id", userID);
+          // const {error: decreaseError} = await supabase.rpc("decrease_likes", {
+          //   post_row_id: postID,
+          // });
+          // if(decreaseError){
+          //   set({ error: "Error Decrease Likes", isLoading: false });
+          //   toast.error("Error Decrease Likes", {
+          //     style: {
+          //       background: "var(--danger-300)",
+          //       border: "1px solid var(--danger-500)",
+          //       color: "#fff",
+          //     },
+          //     description: "Something went wrong",
+          //     duration: 5000,
+          //   });
+          //   throw decreaseError;
+          // }          
+          // set({ isLoading: false, error: null });
+          // toast.success("Like Successfully Removed", {
+          //   style: {
+          //     background: "var(--success-300)",
+          //     border: "1px solid var(--success-500)",
+          //     color: "#fff",
+          //   },
+          //   duration: 3000,
+          // });
+        }else{
+         console.log("no existing Like ", existingLike);
+         //  await supabase
+         // .from("likes")
+         // .insert({
+         //   post_id: postID,
+         //   user_id: user?.id,
+         // })
+         // .select("*")
+         // .single();
+         // const {error: incrementError} = await supabase.rpc("increment_likes", {
+         //  post_row_id: postID,
+         // });
+         // if(incrementError){
+         //  set({ error: "Error Increment Likes", isLoading: false });
+         //  toast.error("Error Increment Likes", {
+         //    style: {
+         //      background: "var(--danger-300)",
+         //      border: "1px solid var(--danger-500)",
+         //      color: "#fff",
+         //    },
+         //    description: "Something went wrong",
+         //    duration: 5000,
+         //  });
+         //  throw incrementError;
+         // }
+         // set({ isLoading: false, error: null });
+         // toast.success("Like Successfully Added", {
+         //   style: {
+         //     background: "var(--success-300)",
+         //     border: "1px solid var(--success-500)",
+         //     color: "#fff",
+         //   },
+         //   duration: 3000,
+         // });
+        }
+    } catch (error: any) {
+      console.log(error);
+      set({ error: error as string, isLoading: false });
     }
   },
 }));

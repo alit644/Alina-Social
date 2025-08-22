@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 interface IPostContent {
   content: string;
   image_url?: string;
@@ -19,4 +21,4 @@ const PostContent = ({ content, image_url }: IPostContent) => {
   );
 };
 
-export default PostContent;
+export default memo(PostContent);
