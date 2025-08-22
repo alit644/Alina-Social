@@ -41,12 +41,12 @@ const Login = () => {
     </FormItem>
   ));
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-50">
+    <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-50 dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-700">
       <AnimatedBackground />
 
       <div className="relative  flex flex-col h-full w-full items-center justify-center px-[20px]">
         {/* content */}
-        <div className="w-full shadow-sm sm:w-[400px] flex flex-col items-center justify-center bg-white border-input p-4 rounded-md">
+        <div className="w-full shadow-sm sm:w-[400px] flex flex-col items-center justify-center bg-white border-input p-4 rounded-md dark:bg-slate-800">
          <div className="w-full mb-6">
           <Logo />
           </div>

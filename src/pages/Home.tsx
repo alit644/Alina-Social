@@ -11,8 +11,8 @@ const Home = () => {
   //TODO: edit user post 4 part(one)       Done 1 TODO
   //TODO: delete user post 5 part(one)     Done
   //!=====================================
-  //TODO: like post 6 part(two) Realtime
-  //TODO: unlike post 7 part(two) Realtime
+  //TODO: like post 6 part(two) Realtime   Done
+  //TODO: unlike post 7 part(two) Realtime Done
   //!=====================================
   //TODO: comment post 8 part(three) Realtime
   //TODO: delete comment 9 part(three) Realtime
@@ -47,8 +47,9 @@ const Home = () => {
         userName={post.profiles?.username || ""}
         avatar={post.profiles?.avatar_url || ""}
         name={post.profiles?.full_name || ""}
-        userID={post.user_id}
         postID={post.id}
+        userID={post.user_id}
+
       />
     );
   });

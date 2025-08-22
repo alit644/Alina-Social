@@ -1,6 +1,6 @@
 import PostCard from "@/components/post/PostCard";
 import { usePostStore } from "@/store/usePost";
-import { useQuery  } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import PageLoader from "@/components/ui/PageLoader";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ const MyPosts = () => {
   const { userProfile } = useAuthStore();
   const { setAlertPostId } = useAlertDialogStore();
   const { data, error } = useQuery({
-    queryKey: ["posts" , "post"],
+    queryKey: ["posts", "post"],
     queryFn: async () => {
       const data = await getUserPosts();
       return data;
@@ -21,7 +21,6 @@ const MyPosts = () => {
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5,
     refetchInterval: 1000 * 60 * 5,
-    
   });
 
   const openDropdown = useCallback(
@@ -42,10 +41,9 @@ const MyPosts = () => {
       avatar={userProfile?.avatar_url || ""}
       name={userProfile?.full_name || ""}
       postID={post.id}
+      userID={post.user_id}
     >
-      <MDropddownMenu
-        postId={post.id}
-      >
+      <MDropddownMenu postId={post.id}>
         <Button
           variant="ghost"
           size="icon"
