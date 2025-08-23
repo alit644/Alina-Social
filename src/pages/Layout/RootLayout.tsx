@@ -23,9 +23,9 @@ const RootLayout = () => {
         <div className="hidden sm:block sm:col-span-4 lg:col-span-3  mt-6">
           <AppSidebar />
         </div>
-        <div className={`col-span-4 sm:col-span-8  mt-6 ${hideSuggested ? "lg:col-span-9" : "lg:col-span-6"}`}>
+        <main className={`col-span-4 sm:col-span-8  mt-6 ${hideSuggested ? "lg:col-span-9" : "lg:col-span-6"}`}>
           <Outlet />
-        </div>
+        </main>
         {/* Suggested Friends */}
         {!hideSuggested && (
           <div className="hidden lg:block lg:col-span-3 mt-6">

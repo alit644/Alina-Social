@@ -7,6 +7,7 @@ import { AuthContextProvider } from "./context/AuthProvider";
 import MAlertDialog from "@/components/shared/MAlertDialog";
 import { MDialog } from "@/components/shared/MDialog";
 import { useLikeStore } from "@/store/useLikes";
+import CommentDrawer from "./components/shared/CommentDrawer";
 function App() {
   const { fetchUser, isLoading, getUserProfile } = useAuthStore();
   const { resetLikes } = useLikeStore();
@@ -26,6 +27,7 @@ function App() {
         <RouterProvider router={router} />
         <MAlertDialog />
         <MDialog />
+        <CommentDrawer />
       </AuthContextProvider>
     </>
   );

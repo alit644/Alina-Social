@@ -28,7 +28,7 @@ export const MDropddownMenu: React.FC<MDropdownMenuProps> = ({
     >
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuItem onClick={() => setOpenDialogId(postId)}>
+       <DropdownMenuItem onClick={() => setOpenDialogId(postId)}>
           Edit
         </DropdownMenuItem>
         <DropdownMenuItem

@@ -23,7 +23,6 @@ const Login = () => {
   });
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
    await signIn(data)
-   
   };
 
   //! render Inputs

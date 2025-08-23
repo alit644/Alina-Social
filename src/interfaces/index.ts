@@ -65,7 +65,22 @@ export interface IPost {
     image_url: string;
     user_id: string;
     created_at: string;
+    comment_count?: number;
     profiles?: {
+      avatar_url: string;
+      full_name: string;
+      username: string;
+    };
+}
+
+export interface IComment {
+    id: string;
+    content: string;
+    user_id: string;
+    post_id: string;
+    created_at: string;
+    profiles?: {
+     id?: string;
       avatar_url: string;
       full_name: string;
       username: string;
