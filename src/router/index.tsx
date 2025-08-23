@@ -15,17 +15,22 @@ import RootLayout from "@/pages/Layout/RootLayout";
 import PageLoader from "@/components/ui/PageLoader";
 import ProfileLayout from "@/pages/Layout/ProfileLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import PostSkeleton from "@/components/shared/PostSkeleton";
 const withSuspense = (Component: LazyExoticComponent<() => JSX.Element>) => (
   <Suspense fallback={<PageLoader />}>{<Component />}</Suspense>
 );
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute children={<RootLayout/>}/>,
+    element: <ProtectedRoute children={<RootLayout />} />,
     children: [
       {
         path: "/",
-        Component: () => withSuspense(Home),
+        element: (
+          <Suspense fallback={<PostSkeleton />}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: "/profile",
@@ -33,11 +38,19 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: () => withSuspense(Profile),
+            element: (
+              <Suspense fallback={<PostSkeleton />}>
+                <Profile />
+              </Suspense>
+            ),
           },
           {
             path: "saved-post",
-            Component: () => withSuspense(SavedPost),
+            element: (
+              <Suspense fallback={<PostSkeleton />}>
+                <SavedPost />
+              </Suspense>
+            ),
           },
           {
             path: "settings",
@@ -69,18 +82,10 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: (
-      <ProtectedRoute redirectIfAuthenticated children={<Login/>}/>
-       
-      
-    ),
+    element: <ProtectedRoute redirectIfAuthenticated children={<Login />} />,
   },
   {
     path: "/register",
-    element: (
-      <ProtectedRoute redirectIfAuthenticated children={<Register/>}/>
-      
-      
-    ),
+    element: <ProtectedRoute redirectIfAuthenticated children={<Register />} />,
   },
 ]);

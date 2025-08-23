@@ -15,9 +15,9 @@ const ProfileLayout = () => {
       <div className="col-span-12">
         <ProfileInfoCard />
       </div>
-      <div className={`col-span-12 ${hideSuggested ? "col-span-12" : "lg:col-span-8"} m-0`}>
+      <main className={`col-span-12 ${hideSuggested ? "col-span-12" : "lg:col-span-8"} m-0`}>
         <Outlet />
-      </div>
+      </main>
       {
        !hideSuggested && (
         <div className="hidden lg:block lg:col-span-4">

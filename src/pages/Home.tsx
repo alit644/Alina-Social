@@ -1,20 +1,21 @@
 import AddPostCard from "@/components/post/AddPostCard";
 import PostCard from "@/components/post/PostCard";
-import PageLoader from "@/components/ui/PageLoader";
+import PostSkeleton from "@/components/shared/PostSkeleton";
 import type { IPost } from "@/interfaces";
 import { usePostStore } from "@/store/usePost";
 import { useQuery } from "@tanstack/react-query";
+import NoResults from "@/components/shared/NoResults";
 const Home = () => {
-  //TODO: create new Post 1 part(one)      Done
-  //TODO: get all posts 2 part(one)        Done
-  //TODO: get only user posts 3 part(one)  Done
-  //TODO: edit user post 4 part(one)       Done 1 TODO
-  //TODO: delete user post 5 part(one)     Done
+  //TODO: create new Post 1 part(one)             Done
+  //TODO: get all posts 2 part(one)               Done
+  //TODO: get only user posts 3 part(one)         Done
+  //TODO: edit user post 4 part(one)              Done 1 TODO
+  //TODO: delete user post 5 part(one)            Done
   //!=====================================
-  //TODO: like post 6 part(two) Realtime   Done
-  //TODO: unlike post 7 part(two) Realtime Done
+  //TODO: like post 6 part(two) Realtime          Done
+  //TODO: unlike post 7 part(two) Realtime        Done
   //!=====================================
-  //TODO: comment post 8 part(three) Realtime
+  //TODO: comment post 8 part(three) Realtime     Done
   //TODO: delete comment 9 part(three) Realtime
   //TODO: edit comment 10 part(three) Realtime
   //!=====================================
@@ -49,19 +50,22 @@ const Home = () => {
         name={post.profiles?.full_name || ""}
         postID={post.id}
         userID={post.user_id}
-
       />
     );
   });
 
-
-  if (isLoading) return <PageLoader />;
+  if (isLoading) return <PostSkeleton />;
   if (error) return <div>{error.message}</div>;
   return (
     <>
       <AddPostCard />
-      <div className="my-6">{renderPost}</div>
-      
+      <div className="my-6">
+        {renderPost?.length !== undefined && renderPost?.length > 0 ? (
+          renderPost
+        ) : (
+          <NoResults />
+        )}
+      </div>
     </>
   );
 };

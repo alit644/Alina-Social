@@ -20,7 +20,6 @@ interface IUsePost {
     postID: string,
     data: { content: string; image_url?: string | File | null }
   ) => Promise<IPost | undefined>;
-  toggelLike: (postID: string) => Promise<void>;
 }
 export const usePostStore = create<IUsePost>((set) => ({
   posts: [] as IPost[],
@@ -336,89 +335,6 @@ export const usePostStore = create<IUsePost>((set) => ({
         description: "Something went wrong",
         duration: 5000,
       });
-    }
-  },
-  toggelLike: async (postID: string) => {
-    set({ isLoading: true, error: null });
-    const {user} = useAuthStore.getState()
-    try {
-      const { data: existingLike } = await supabase
-        .from("likes")
-        .select("*")
-        .eq("post_id", postID)
-        .eq("user_id", user?.id);
-        console.log("existingLike", existingLike);
-        if(existingLike){
-          console.log("existing Like ", existingLike);
-          //  await supabase
-          // .from("likes")
-          // .delete()
-          // .eq("post_id", postID)
-          // .eq("user_id", userID);
-          // const {error: decreaseError} = await supabase.rpc("decrease_likes", {
-          //   post_row_id: postID,
-          // });
-          // if(decreaseError){
-          //   set({ error: "Error Decrease Likes", isLoading: false });
-          //   toast.error("Error Decrease Likes", {
-          //     style: {
-          //       background: "var(--danger-300)",
-          //       border: "1px solid var(--danger-500)",
-          //       color: "#fff",
-          //     },
-          //     description: "Something went wrong",
-          //     duration: 5000,
-          //   });
-          //   throw decreaseError;
-          // }          
-          // set({ isLoading: false, error: null });
-          // toast.success("Like Successfully Removed", {
-          //   style: {
-          //     background: "var(--success-300)",
-          //     border: "1px solid var(--success-500)",
-          //     color: "#fff",
-          //   },
-          //   duration: 3000,
-          // });
-        }else{
-         console.log("no existing Like ", existingLike);
-         //  await supabase
-         // .from("likes")
-         // .insert({
-         //   post_id: postID,
-         //   user_id: user?.id,
-         // })
-         // .select("*")
-         // .single();
-         // const {error: incrementError} = await supabase.rpc("increment_likes", {
-         //  post_row_id: postID,
-         // });
-         // if(incrementError){
-         //  set({ error: "Error Increment Likes", isLoading: false });
-         //  toast.error("Error Increment Likes", {
-         //    style: {
-         //      background: "var(--danger-300)",
-         //      border: "1px solid var(--danger-500)",
-         //      color: "#fff",
-         //    },
-         //    description: "Something went wrong",
-         //    duration: 5000,
-         //  });
-         //  throw incrementError;
-         // }
-         // set({ isLoading: false, error: null });
-         // toast.success("Like Successfully Added", {
-         //   style: {
-         //     background: "var(--success-300)",
-         //     border: "1px solid var(--success-500)",
-         //     color: "#fff",
-         //   },
-         //   duration: 3000,
-         // });
-        }
-    } catch (error: any) {
-      console.log(error);
-      set({ error: error as string, isLoading: false });
     }
   },
 }));

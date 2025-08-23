@@ -3,10 +3,11 @@ import { MessageCircle } from "lucide-react";
 import { useLikeStore } from "@/store/useLikes";
 import { memo, useEffect } from "react";
 import supabase from "@/supabase";
+import { useAlertDialogStore } from "@/store/useAlertDialog";
 
 const PostFooter = ({ postID, userID }: { postID: string; userID: string }) => {
   const { toggleLike, fetchLikes, likes, subscribeToLikes } = useLikeStore();
-
+  const { setOpenCommentDrawerId } = useAlertDialogStore();
   useEffect(() => {
     fetchLikes(postID);
     const channel = subscribeToLikes(postID);
@@ -16,10 +17,18 @@ const PostFooter = ({ postID, userID }: { postID: string; userID: string }) => {
   }, [postID, fetchLikes, subscribeToLikes]);
   const postsLikes = likes[postID] || { isLiked: false, count: 0 };
 
+  const handleComment = () => {
+    setOpenCommentDrawerId(postID);
+  };
+
   return (
     <div className="flex items-center justify-between mb-2 gap-2 mx-2 w-full">
       <div>
-        <Button variant="ghost" className="text-[var(--neutral-500)]">
+        <Button
+          variant="ghost"
+          className="text-[var(--neutral-500)]"
+          onClick={handleComment}
+        >
           <MessageCircle className="h-5 w-5  mr-2" /> Comment
         </Button>
       </div>

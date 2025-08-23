@@ -6,6 +6,8 @@ interface IAlertDialog {
   setAlertPostId: (id: string | null) => void;
   openDialogId: string | null;
   setOpenDialogId: (id: string | null) => void;
+  openCommentDrawerId: string | null;
+  setOpenCommentDrawerId: (id: string | null) => void;
 }
 
 export const useAlertDialogStore = create<IAlertDialog>((set) => ({
@@ -15,4 +17,6 @@ export const useAlertDialogStore = create<IAlertDialog>((set) => ({
   setAlertPostId: (id) => set({ alertPostId: id }),
   openDialogId: null,
   setOpenDialogId: (id) => set({ openDialogId: id }),
+  openCommentDrawerId: null,
+  setOpenCommentDrawerId: (id) => set({ openCommentDrawerId: id }),
 }));

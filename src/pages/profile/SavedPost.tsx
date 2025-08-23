@@ -1,12 +1,10 @@
 import React from 'react';
-import PostCard from '@/components/post/PostCard';
+import NoResults from '@/components/shared/NoResults';
 
 const SavedPost = () => {
  return (
   <div className="">
-   <PostCard />
-   <PostCard />
-   <PostCard />
+   <NoResults />
   </div>
  );
 }
