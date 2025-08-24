@@ -31,7 +31,7 @@ const MyPosts = () => {
     [setAlertPostId]
   );
 
-  if (data?.length === 0) return <div>No Posts</div>;
+  if (data?.length === 0) return <NoResults />
   const renderUserPost = data?.map((post) => (
     <PostCard
       key={post.id}

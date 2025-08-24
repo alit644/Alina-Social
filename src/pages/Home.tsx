@@ -6,24 +6,13 @@ import { usePostStore } from "@/store/usePost";
 import { useQuery } from "@tanstack/react-query";
 import NoResults from "@/components/shared/NoResults";
 const Home = () => {
-  //TODO: create new Post 1 part(one)             Done
-  //TODO: get all posts 2 part(one)               Done
-  //TODO: get only user posts 3 part(one)         Done
-  //TODO: edit user post 4 part(one)              Done 1 TODO
-  //TODO: delete user post 5 part(one)            Done
-  //!=====================================
-  //TODO: like post 6 part(two) Realtime          Done
-  //TODO: unlike post 7 part(two) Realtime        Done
-  //!=====================================
-  //TODO: comment post 8 part(three) Realtime     Done
-  //TODO: delete comment 9 part(three) Realtime
-  //TODO: edit comment 10 part(three) Realtime
-  //!=====================================
   //TODO: search user 11 part(four) Realtime
   //!=====================================
   //TODO: Message 12 part(five) Realtime
   //!=====================================
   //TODO: notification 13 part(six) Realtime
+  //!=====================================
+  //TODO: Add notify all store
   //!=====================================
 
   const { getAllPosts, isLoading } = usePostStore();
