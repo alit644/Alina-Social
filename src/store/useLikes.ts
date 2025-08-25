@@ -1,6 +1,6 @@
+import notify from "@/helper/notify";
 import supabase from "@/supabase";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { toast } from "sonner";
 import { create } from "zustand";
 interface ILikeStore {
   likes: {
@@ -104,7 +104,7 @@ export const useLikeStore = create<ILikeStore>((set, get) => ({
       }
     } catch (error) {
       console.log("error toggleLike", error);
-      toast.error("Something went wrong");
+      notify("error", "Something went wrong");
     }
   },
 

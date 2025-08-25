@@ -10,10 +10,6 @@ const Home = () => {
   //!=====================================
   //TODO: Message 12 part(five) Realtime
   //!=====================================
-  //TODO: notification 13 part(six) Realtime
-  //!=====================================
-  //TODO: Add notify all store
-  //!=====================================
 
 
 
