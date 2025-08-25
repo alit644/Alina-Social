@@ -130,3 +130,18 @@ export interface IMFriend {
   avatar_url: string;
   friend_request_id: string;
 }
+
+export interface INotification {
+  content: string;
+  created_at: string;
+  id: string;
+  is_read: boolean;
+  post_id: string;
+  sender_id: string;
+  type: "like" | "comment" | "friend_request";
+  fk_sender?: {
+    avatar_url: string;
+    full_name: string;
+    username: string;
+  };
+}
