@@ -1,5 +1,5 @@
 import ProfileInfoCard from "@/components/profile/ProfileInfoCard";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, ScrollRestoration, useLocation } from "react-router";
 import SuggestedFriendCard from "@/components/SuggestedFriendCard";
 
 const ProfileLayout = () => {
@@ -16,6 +16,7 @@ const ProfileLayout = () => {
         <ProfileInfoCard />
       </div>
       <main className={`col-span-12 ${hideSuggested ? "col-span-12" : "lg:col-span-8"} m-0`}>
+      <ScrollRestoration />
         <Outlet />
       </main>
       {

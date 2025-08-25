@@ -6,8 +6,25 @@ import { PROFILE_ITEMS } from "@/data";
 import { NavLink } from "react-router";
 import PostCount from "./PostCount";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
+import { useFriendsStore } from "@/store/useFriends";
+import { useQuery } from "@tanstack/react-query";
+import getUserId from "@/helper/getUserId";
 const ProfileInfoCard = () => {
   const { userProfile } = useAuthStore();
+
+  const { getProfileStats } = useFriendsStore();
+  const { data: profileStats } = useQuery({
+    queryKey: ["profileStats"],
+    queryFn: async () => {
+      const userID = await getUserId();
+      const data = await getProfileStats(userID || "");
+      return data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5,
+    refetchInterval: 1000 * 60 * 5,
+  });
+
   const renderProfileLinks = PROFILE_ITEMS.map((item) => (
     <div key={item.id}>
       <Button
@@ -47,7 +64,7 @@ const ProfileInfoCard = () => {
           {/* bio */}
 
           {/* post count */}
-          <PostCount />
+          <PostCount data={profileStats || { posts: 0, friends: 0 }} />
         </section>
 
         {/* bio */}

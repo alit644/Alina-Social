@@ -14,8 +14,6 @@ function App() {
   useEffect(() => {
     fetchUser();
     getUserProfile();
-    // session change
-
     return () => {};
   }, [fetchUser, getUserProfile, resetLikes]);
 

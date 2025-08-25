@@ -20,6 +20,7 @@ interface IUsePost {
     postID: string,
     data: { content: string; image_url?: string | File | null }
   ) => Promise<IPost | undefined>;
+  getUserPostById: (userID: string) => Promise<IPost[] | undefined>;
 }
 export const usePostStore = create<IUsePost>((set) => ({
   posts: [] as IPost[],
@@ -327,6 +328,44 @@ export const usePostStore = create<IUsePost>((set) => ({
       console.log(error);
       set({ error: error as string, isLoading: false });
       toast.error("Error Update Post", {
+        style: {
+          background: "var(--danger-300)",
+          border: "1px solid var(--danger-500)",
+          color: "#fff",
+        },
+        description: "Something went wrong",
+        duration: 5000,
+      });
+    }
+  },
+  getUserPostById: async (postID: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("user_id", postID)
+        .limit(10)
+        .order("created_at", { ascending: false });
+      if (error) {
+        set({ error: "Error Get User Posts", isLoading: false });
+        toast.error("Error Get User Posts", {
+          style: {
+            background: "var(--danger-300)",
+            border: "1px solid var(--danger-500)",
+            color: "#fff",
+          },
+          description: "Something went wrong",
+          duration: 5000,
+        });
+        throw error;
+      }
+      set({ posts: data, isLoading: false, error: null });
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error as string, isLoading: false });
+      toast.error("Error Get User Posts", {
         style: {
           background: "var(--danger-300)",
           border: "1px solid var(--danger-500)",

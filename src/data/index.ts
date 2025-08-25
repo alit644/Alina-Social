@@ -1,5 +1,13 @@
 import type { IGeneralInput, ILoginInput, IRegisterInput } from "@/interfaces";
-import { Bell, Bookmark, Home, LayoutGrid, Send, Settings, User } from "lucide-react";
+import {
+  Bell,
+  Bookmark,
+  Home,
+  LayoutGrid,
+  Send,
+  Settings,
+  User,
+} from "lucide-react";
 
 export const LOGIN_INPUTS: ILoginInput[] = [
   {
@@ -26,79 +34,77 @@ export const LOGIN_INPUTS: ILoginInput[] = [
 ];
 
 export const REGISTER_INPUST: IRegisterInput[] = [
- {
-  id: "name",
-  name: "name",
-  type: "text",
-  placeholder: "Name",
-  validation: {
-    required: "Name is required",
-    min: 3,
-    max: 20,
+  {
+    id: "name",
+    name: "name",
+    type: "text",
+    placeholder: "Name",
+    validation: {
+      required: "Name is required",
+      min: 3,
+      max: 20,
+    },
   },
- },
- {
-  id: "email",
-  name: "email",
-  type: "email",
-  placeholder: "Email",
-  validation: {
-    required: "Email is required",
-    pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+  {
+    id: "email",
+    name: "email",
+    type: "email",
+    placeholder: "Email",
+    validation: {
+      required: "Email is required",
+      pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+    },
   },
- },
- {
-  id: "username",
-  name: "username",
-  type: "text",
-  placeholder: "Username",
-  validation: {
-    required: "Username is required",
-    min: 3,
-    max: 20,
-    pattern: /^[^@]+$/i,
+  {
+    id: "username",
+    name: "username",
+    type: "text",
+    placeholder: "Username",
+    validation: {
+      required: "Username is required",
+      min: 3,
+      max: 20,
+      pattern: /^[^@]+$/i,
+    },
   },
- },
- {
-  id: "password",
-  name: "password",
-  type: "password",
-  placeholder: "Password",
-  validation: {
-    required: "Password is required",
-    min: 6,
-    max: 20,
+  {
+    id: "password",
+    name: "password",
+    type: "password",
+    placeholder: "Password",
+    validation: {
+      required: "Password is required",
+      min: 6,
+      max: 20,
+    },
   },
- }
-]
-
-export const GENERAL_INPUTS: IGeneralInput[] = [
- {
-   id: "fullname",
-   name: "full_name",
-   type: "text",
-   placeholder: "Full Name",
-   validation: {
-     required: "Full name is required",
-     min: 3,
-     max: 20,
-
-   },
- },
- {
-   id: "username",
-   name: "username",
-   type: "text",
-   placeholder: "User name",
-   validation: {
-     required: "User name is required",
-     min: 4,
-     max: 20,
-     pattern: /^[^@]+$/i,
-   },
- },
 ];
 
+export const GENERAL_INPUTS: IGeneralInput[] = [
+  {
+    id: "fullname",
+    name: "full_name",
+    type: "text",
+    placeholder: "Full Name",
+    validation: {
+      required: "Full name is required",
+      min: 3,
+      max: 20,
+    },
+  },
+  {
+    id: "username",
+    name: "username",
+    type: "text",
+    placeholder: "User name",
+    validation: {
+      required: "User name is required",
+      min: 4,
+      max: 20,
+      pattern: /^[^@]+$/i,
+    },
+  },
+];
 
 export const SIDEBAR_ITEMS = [
   {
@@ -125,7 +131,7 @@ export const SIDEBAR_ITEMS = [
     icon: Bell,
     to: "/notifications",
   },
-]
+];
 
 export const PROFILE_ITEMS = [
   {
@@ -133,6 +139,12 @@ export const PROFILE_ITEMS = [
     name: "My Posts",
     icon: LayoutGrid,
     to: "/profile",
+  },
+  {
+    id: "friends",
+    name: "Follow Requests",
+    icon: User,
+    to: "/friends/incoming-requests",
   },
   {
     id: "saved",
@@ -146,4 +158,4 @@ export const PROFILE_ITEMS = [
     icon: Settings,
     to: "/profile/settings",
   },
-]
+];

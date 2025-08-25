@@ -1,9 +1,17 @@
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import FriendsCard from "./shared/FriendsCard";
 import { useFriendsStore } from "@/store/useFriends";
 import { useQuery } from "@tanstack/react-query";
 import type { IFriend } from "@/interfaces";
 import { Skeleton } from "./ui/skeleton";
+import { Button } from "./ui/button";
+import { Link } from "react-router";
 
 const SuggestedFriendCard = () => {
   const { getRandomFriends } = useFriendsStore();
@@ -20,12 +28,7 @@ const SuggestedFriendCard = () => {
   });
 
   const renderFriend = data?.map((friend: IFriend) => {
-    return (
-      <FriendsCard
-        key={friend.id}
-        data={friend}
-      />
-    );
+    return <FriendsCard key={friend.id} data={friend} />;
   });
 
   return (
@@ -43,6 +46,11 @@ const SuggestedFriendCard = () => {
           renderFriend
         )}
       </CardContent>
+      <CardFooter>
+        <Button variant="ghost" className="w-full" title="See All">
+          <Link to="/all-friends">See All</Link>
+        </Button>
+      </CardFooter>
     </Card>
   );
 };
