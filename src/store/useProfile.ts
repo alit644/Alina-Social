@@ -10,6 +10,7 @@ interface IUseProfile {
   userProfile: any | null;
   updateProfile: (data: any) => Promise<void>;
   getUserProfile: (userID: string) => Promise<IProfile>;
+  getUserProfileById: (userID: string) => Promise<IProfile>;
 }
 export const useProfileStore = create<IUseProfile>((set) => ({
   isLoading: false,
@@ -84,6 +85,21 @@ export const useProfileStore = create<IUseProfile>((set) => ({
       if (error) throw error;
       set({ userProfile: data, isLoading: false, error: null });
       useAuthStore.setState({ userProfile: data });
+      return data;
+    } catch (error) {
+      set({ error: error as string, isLoading: false });
+    }
+  },
+  getUserProfileById: async (userID: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userID)
+        .maybeSingle();
+      if (error) throw error;
+      set({ isLoading: false, error: null });
       return data;
     } catch (error) {
       set({ error: error as string, isLoading: false });

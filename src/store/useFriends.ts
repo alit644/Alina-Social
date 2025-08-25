@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   IFriend,
   IFriendRequest,
@@ -5,7 +6,6 @@ import type {
   IOutgoingRequest,
 } from "@/interfaces";
 import supabase from "@/supabase";
-import { toast } from "sonner";
 import { create } from "zustand";
 import notify from "@/helper/notify";
 import getUserId from "@/helper/getUserId";
@@ -22,7 +22,9 @@ interface IFriendsStore {
   cancelRequest: (requestId: string) => Promise<void>;
   getMyFriends: () => Promise<IMFriend[]>;
   unFollow: (friend_request_id: string) => Promise<void>;
-  getProfileStats: () => Promise<{ posts: number; friends: number }>;
+  getProfileStats: (
+    userID: string
+  ) => Promise<{ posts: number; friends: number }>;
 }
 export const useFriendsStore = create<IFriendsStore>((set) => ({
   isLoading: false,
@@ -51,9 +53,9 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
       const { data, error } = await supabase
         .from("profiles")
         .select("id,username, avatar_url, full_name")
-        .not("id", "eq", userID) 
+        .not("id", "eq", userID)
         .not("id", "in", `(${friendIds.join(",") || "null"})`)
-        .limit(6);
+        .limit(8);
       if (error) throw error;
       set({ friends: data, isLoading: false, error: null });
       return data;
@@ -67,7 +69,6 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
     try {
       // Current User
       const userID = await getUserId();
-      console.log(userID);
       if (!userID) throw new Error("No session");
 
       const { error: errAdd } = await supabase.from("friend_requests").insert({
@@ -77,24 +78,27 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
       });
 
       if (errAdd) {
-        toast.error("Error Add Friend", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: "Something went wrong",
-          duration: 5000,
-        });
+        notify(
+          "error",
+          "Error Add Friend",
+          errAdd?.code === "23505"
+            ? "Friend Request Already Sent"
+            : "Something went wrong"
+        );
         throw errAdd;
       }
       notify("success", "Friend Request Sent");
       set({ isLoading: false, error: null });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      notify("error", "Error Add Friend");
+      notify(
+        "error",
+        "Error Add Friend",
+        error?.code === "23505"
+          ? "Friend Request Already Sent"
+          : "Something went wrong"
+      );
       set({ error: error as string, isLoading: false });
-      notify("error", "Error Add Friend");
     }
   },
   IncomingRequests: async () => {
@@ -298,11 +302,9 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
       set({ isLoading: false, error: error as string });
     }
   },
-  getProfileStats: async () => {
+  getProfileStats: async (userID: string) => {
     set({ isLoading: true, error: null });
     try {
-      const userID = await getUserId();
-
       // 1- عدد البوستات
       const { count: postsCount, error: postsError } = await supabase
         .from("posts")

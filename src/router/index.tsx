@@ -13,6 +13,8 @@ const MessageContent = lazy(() => import("@/pages/messages/MessageContent"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
 const IncomingRequests = lazy(() => import("@/pages/friends/IncomingRequests"));
 const Friends = lazy(() => import("@/pages/friends/Friends"));
+const AllFriends = lazy(() => import("@/pages/friends/AllFriends"));
+const UserProfile = lazy(() => import("@/pages/profile/UserProfile"));
 import RootLayout from "@/pages/Layout/RootLayout";
 import PageLoader from "@/components/ui/PageLoader";
 import ProfileLayout from "@/pages/Layout/ProfileLayout";
@@ -87,6 +89,14 @@ export const router = createBrowserRouter([
       {
         path: "/friends/incoming-requests",
         Component: () => withSuspense(IncomingRequests),
+      },
+      {
+        path: "/all-friends",
+        Component: () => withSuspense(AllFriends),
+      },
+      {
+        path: "/user/:userID",
+        Component: () => withSuspense(UserProfile),
       },
     ],
   },

@@ -1,12 +1,12 @@
 import NavBar from "@/components/shared/NavBar";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, ScrollRestoration, useLocation } from "react-router";
 import AppSidebar from "@/components/shared/AppSidebar";
 import SuggestedFriendCard from "@/components/SuggestedFriendCard";
 
 const RootLayout = () => {
   const location = useLocation();
-
-  const hideSuggested = ["/profile", "/profile/saved-post","/profile/settings", "/messages"].includes(
+  const username = location.pathname.startsWith("/user/") ? location.pathname.split("/")[2] : null;
+  const hideSuggested = ["/profile", "/profile/saved-post","/profile/settings", "/messages", "/all-friends", username].includes(
     location.pathname
   );
 
@@ -23,11 +23,13 @@ const RootLayout = () => {
         <div className="hidden sm:block sm:col-span-4 lg:col-span-3  mt-6">
           <AppSidebar />
         </div>
-        <main className={`col-span-4 sm:col-span-8  mt-6 ${hideSuggested ? "lg:col-span-9" : "lg:col-span-6"}`}>
+
+        <main className={`col-span-4 sm:col-span-8  mt-6 ${hideSuggested || username !== null ? "lg:col-span-9" : "lg:col-span-6"}`}>
+        <ScrollRestoration />
           <Outlet />
         </main>
         {/* Suggested Friends */}
-        {!hideSuggested && (
+        {!hideSuggested && username === null && (
           <div className="hidden lg:block lg:col-span-3 mt-6">
             <SuggestedFriendCard />
           </div>

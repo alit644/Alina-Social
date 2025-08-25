@@ -1,19 +1,13 @@
-import { useFriendsStore } from "@/store/useFriends";
+import { memo } from "react";
 import { Link } from "react-router";
-import { useQuery } from "@tanstack/react-query";
 
-const PostCount = () => {
- const {getProfileStats} =useFriendsStore()
- const {data}= useQuery({
-  queryKey:["profileStats" ],
-  queryFn:async()=>{
-    const data = await getProfileStats()
-    return data
-   },
-   refetchOnWindowFocus:false,
-   staleTime:1000*60*5,
-   refetchInterval:1000*60*5
-  })
+const PostCount = ({
+  data,
+  isNav = true,
+}: {
+  data: { posts: number; friends: number };
+  isNav?: boolean;
+}) => {
   return (
     <section className="flex gap-5 ">
       <div id="posts" className="flex flex-col ">
@@ -21,13 +15,24 @@ const PostCount = () => {
         <p className="p2">Posts</p>
       </div>
       <div id="friends" className="flex flex-col ">
-        <Link to="/friends">
-          <h3 className="H4">{data?.friends === undefined ? 0 : data?.friends}</h3>
-          <p className="p2">Friends</p>
-        </Link>
+        {isNav ? (
+          <Link to="/friends">
+            <h3 className="H4">
+              {data?.friends === undefined ? 0 : data?.friends}
+            </h3>
+            <p className="p2">Friends</p>
+          </Link>
+        ) : (
+          <>
+            <h3 className="H4">
+              {data?.friends === undefined ? 0 : data?.friends}
+            </h3>
+            <p className="p2">Friends</p>
+          </>
+        )}
       </div>
     </section>
   );
 };
 
-export default PostCount;
+export default memo(PostCount);

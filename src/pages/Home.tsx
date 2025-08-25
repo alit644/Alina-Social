@@ -15,6 +15,8 @@ const Home = () => {
   //TODO: Add notify all store
   //!=====================================
 
+
+
   const { getAllPosts, isLoading } = usePostStore();
   const { data, error } = useQuery({
     queryKey: ["posts"],
