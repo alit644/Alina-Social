@@ -61,7 +61,7 @@ const Friends = () => {
     </div>
   ));
   return (
-    <Card className="shadow-none rounded-md mt-6">
+    <Card className="shadow-none rounded-md">
       <CardHeader>
         <CardTitle className="H4">My Friends</CardTitle>
       </CardHeader>

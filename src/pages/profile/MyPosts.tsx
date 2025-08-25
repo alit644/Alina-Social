@@ -43,6 +43,7 @@ const MyPosts = () => {
       name={userProfile?.full_name || ""}
       postID={post.id}
       userID={post.user_id}
+      
     >
       <MDropddownMenu postId={post.id}>
         <Button

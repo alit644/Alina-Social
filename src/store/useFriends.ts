@@ -161,9 +161,7 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
       const userID = await getUserId();
       const { error } = await supabase
         .from("friend_requests")
-        .update({
-          status: "rejected",
-        })
+        .delete()
         .eq("receiver_id", userID)
         .eq("id", requestId)
         .eq("status", "pending");
