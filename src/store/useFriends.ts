@@ -30,6 +30,7 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
   isLoading: false,
   error: null,
   friends: [],
+  //TODO : خطأ عند جلب الاصدقاء
   getRandomFriends: async () => {
     set({ isLoading: true, error: null });
     try {

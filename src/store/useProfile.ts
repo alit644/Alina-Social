@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
 import supabase from "@/supabase";
-import { toast } from "sonner";
 import { useAuthStore } from "./Auth/useAuthStore";
 import type { IProfile } from "@/interfaces";
+import notify from "@/helper/notify";
 interface IUseProfile {
   isLoading: boolean;
   error: string | null;
@@ -30,7 +30,10 @@ export const useProfileStore = create<IUseProfile>((set) => ({
             upsert: true, // يعني يبدل الملف إذا موجود
           });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+         notify("error", uploadError?.message || "Error Update Profile");
+         throw uploadError;
+        }
 
         // جلب الرابط العام
         const { data: publicUrlData } = supabase.storage
@@ -48,30 +51,17 @@ export const useProfileStore = create<IUseProfile>((set) => ({
           avatar_url: avataUrl,
         })
         .eq("id", user.id);
-      if (updateErr) throw updateErr;
-      console.log(updatedProfile);
+      if (updateErr) {
+       notify("error", updateErr?.message || "Error Update Profile");
+       throw updateErr;
+      }
       set({ userProfile: updatedProfile, isLoading: false, error: null });
 
-      toast.success("Profile updated successfully", {
-        style: {
-          background: "var(--success-300)",
-          border: "1px solid var(--success-500)",
-          color: "#fff",
-        },
-        duration: 5000,
-      });
+      notify("success", "Profile Successfully Updated");
     } catch (error) {
       console.log(error);
       set({ error: error as string, isLoading: false });
-      toast.error("Error", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: error as string,
-        duration: 5000,
-      });
+     notify("error", "Error Update Profile");
     }
   },
   getUserProfile: async (userID: string) => {
@@ -82,7 +72,10 @@ export const useProfileStore = create<IUseProfile>((set) => ({
         .select("*")
         .eq("id", userID)
         .maybeSingle();
-      if (error) throw error;
+      if (error) {
+       notify("error", error?.message || "Error Get User Profile");
+       throw error;
+      }
       set({ userProfile: data, isLoading: false, error: null });
       useAuthStore.setState({ userProfile: data });
       return data;
@@ -98,7 +91,10 @@ export const useProfileStore = create<IUseProfile>((set) => ({
         .select("*")
         .eq("id", userID)
         .maybeSingle();
-      if (error) throw error;
+      if (error) {
+       notify("error", error?.message || "Error Get User Profile");
+       throw error;
+      }
       set({ isLoading: false, error: null });
       return data;
     } catch (error) {

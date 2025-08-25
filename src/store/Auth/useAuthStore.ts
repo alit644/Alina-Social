@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import notify from "@/helper/notify";
 import type { ISignUpData, ISignInData } from "@/interfaces";
 import supabase from "@/supabase";
-import { toast } from "sonner";
 import { create } from "zustand";
 
 interface IAuthStore {
@@ -46,19 +46,10 @@ export const useAuthStore = create<IAuthStore>((set) => ({
           isLoading: false,
           error: authError?.message || "Something went wrong",
         });
-        toast.error("Error", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: authError?.message || "Something went wrong",
-          duration: 5000,
-        });
+
+        notify("error", "Error", authError?.message || "Something went wrong");
         return;
       }
-
-      // Create profile
       const { error: profileError } = await supabase.from("profiles").insert({
         id: userData.user?.id,
         email: data.email,
@@ -74,34 +65,21 @@ export const useAuthStore = create<IAuthStore>((set) => ({
           isLoading: false,
           error: profileError?.message || "Something went wrong",
         });
-        toast.error("Error", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: profileError?.message || "Something went wrong",
-          duration: 5000,
-        });
+        notify(
+          "error",
+          "Error",
+          profileError?.message || "Something went wrong"
+        );
+
         return;
       }
 
       set({ isLoading: false, error: null });
       window.location.href = "/";
-
-      // window.location.href = "/";
     } catch (error) {
       set({ isLoading: false, error: error as string });
       console.error("Signup error:", error);
-      toast.error("Error", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "An unexpected error occurred",
-        duration: 5000,
-      });
+      notify("error", "Error", "Something went wrong");
     } finally {
       set({ isLoading: false });
     }
@@ -119,31 +97,14 @@ export const useAuthStore = create<IAuthStore>((set) => ({
           isLoading: false,
           error: error?.message || "Something went wrong",
         });
-        toast.error("Error", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: error?.message || "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", "Error", error?.message || "Something went wrong");
       } else {
         set({ isLoading: false, error: null });
         window.location.href = "/";
       }
     } catch (error) {
       set({ isLoading: false, error: error as string });
-      console.error("Signup error:", error);
-      toast.error("Error", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "An unexpected error occurred",
-        duration: 5000,
-      });
+      notify("error", "Error", "Something went wrong");
     } finally {
       set({ isLoading: false });
     }
@@ -152,26 +113,19 @@ export const useAuthStore = create<IAuthStore>((set) => ({
   signInWithGoogle: async () => {
     set({ isLoading: true, error: null });
     try {
-      const { data: user, error: authError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: "http://localhost:5173/",
-        },
-      });
+      const { data: user, error: authError } =
+        await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: "http://localhost:5173/",
+          },
+        });
       if (authError) {
         set({
           isLoading: false,
           error: authError?.message || "Something went wrong",
         });
-        toast.error("Error", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: authError?.message || "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", "Error", authError?.message || "Something went wrong");
         return;
       }
 
@@ -179,15 +133,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
     } catch (error) {
       console.log(error);
       set({ isLoading: false, error: error as string });
-      toast.error("Error", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "An unexpected error occurred",
-        duration: 5000,
-      });
+      notify("error", "Error", "Something went wrong");
     } finally {
       set({ isLoading: false });
     }
@@ -207,15 +153,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
               isLoading: false,
               error: error.message || "Something went wrong",
             });
-            toast.error("Error", {
-              style: {
-                background: "var(--danger-300)",
-                border: "1px solid var(--danger-500)",
-                color: "#fff",
-              },
-              description: error.message || "Something went wrong",
-              duration: 5000,
-            });
+            notify("error", "Error", error.message || "Something went wrong");
           }
         } catch (error) {
           console.log(error);
@@ -244,8 +182,12 @@ export const useAuthStore = create<IAuthStore>((set) => ({
           id: session.user.id,
           avatar_url: session.user.user_metadata?.avatar_url,
           email: session.user.email,
-          full_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
-          username: session.user.user_metadata?.username,
+          full_name:
+            session.user.user_metadata?.full_name ||
+            session.user.user_metadata?.name,
+          username:
+            session.user.user_metadata?.username ||
+            session.user.user_metadata?.name,
           created_at: new Date(),
         },
         { onConflict: "id" }

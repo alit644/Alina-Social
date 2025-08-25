@@ -3,7 +3,7 @@ import type { IPost } from "@/interfaces";
 import { create } from "zustand";
 import { useAuthStore } from "./Auth/useAuthStore";
 import supabase from "@/supabase";
-import { toast } from "sonner";
+import notify from "@/helper/notify";
 interface IUsePost {
   posts: IPost[] | undefined | null;
   isLoading: boolean;
@@ -26,7 +26,6 @@ export const usePostStore = create<IUsePost>((set) => ({
   posts: [] as IPost[],
   isLoading: false,
   error: null,
-  //Create Post
   createPost: async (data) => {
     set({ isLoading: true, error: null });
     try {
@@ -42,15 +41,7 @@ export const usePostStore = create<IUsePost>((set) => ({
           });
         if (uploadError) {
           set({ error: "Error Create Post", isLoading: false });
-          toast.error("Error Create Post", {
-            style: {
-              background: "var(--danger-300)",
-              border: "1px solid var(--danger-500)",
-              color: "#fff",
-            },
-            description: uploadError?.message || "Something went wrong",
-            duration: 5000,
-          });
+          notify("error", uploadError?.message || "Something went wrong");
           throw uploadError;
         }
         const { data: publicUrlData } = supabase.storage
@@ -69,40 +60,18 @@ export const usePostStore = create<IUsePost>((set) => ({
         .single();
       if (error) {
         set({ error: "Error Create Post", isLoading: false });
-        toast.error("Error Create Post", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: error?.message || "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", error?.message || "Something went wrong");
         throw error;
       }
 
       set({ posts: [postData], isLoading: false, error: null });
-      toast.success("Post Successfully Created", {
-        style: {
-          background: "var(--success-300)",
-          border: "1px solid var(--success-500)",
-          color: "#fff",
-        },
-        duration: 5000,
-      });
+
+      notify("success", "Post Successfully Created");
       return data;
     } catch (error: any) {
       console.log(error);
       set({ error: error as string, isLoading: false });
-      toast.error("Error Create Post", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "Something went wrong",
-        duration: 5000,
-      });
+      notify("error", "Error Create Post");
     }
   },
   getUserPosts: async () => {
@@ -116,30 +85,14 @@ export const usePostStore = create<IUsePost>((set) => ({
         .order("created_at", { ascending: false });
       if (error) {
         set({ error: "Error Get User Posts", isLoading: false });
-        toast.error("Error Get User Posts", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", error?.message || "Error Get User Posts");
         throw error;
       }
       set({ posts: data, isLoading: false, error: null });
       return data;
     } catch (error) {
       set({ error: error as string, isLoading: false });
-      toast.error("Error Get User Posts", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "Something went wrong",
-        duration: 5000,
-      });
+      notify("error", "Error Get User Posts");
     }
   },
   getAllPosts: async () => {
@@ -152,30 +105,14 @@ export const usePostStore = create<IUsePost>((set) => ({
         .order("created_at", { ascending: false });
       if (error) {
         set({ error: "Error Get All Posts", isLoading: false });
-        toast.error("Error Get All Posts", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", error?.message || "Error Get All Posts");
         throw error;
       }
       set({ posts: data, isLoading: false, error: null });
       return data;
     } catch (error) {
       set({ error: error as string, isLoading: false });
-      toast.error("Error Get User Posts", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "Something went wrong",
-        duration: 5000,
-      });
+      notify("error", "Error Get All Posts");
     }
   },
   deletePost: async (postID: string) => {
@@ -187,38 +124,15 @@ export const usePostStore = create<IUsePost>((set) => ({
         .eq("id", postID);
       if (deleteError) {
         set({ error: "Error Delete Post", isLoading: false });
-        toast.error("Error Delete Post", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", deleteError?.message || "Error Delete Post");
         throw deleteError;
       }
       set({ isLoading: false, error: null });
-      toast.success("Post Successfully Deleted", {
-        style: {
-          background: "var(--success-300)",
-          border: "1px solid var(--success-500)",
-          color: "#fff",
-        },
-        duration: 5000,
-      });
+      notify("success", "Post Successfully Deleted");
     } catch (error) {
       console.log(error);
       set({ error: error as string, isLoading: false });
-      toast.error("Error Delete Post", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "Something went wrong",
-        duration: 5000,
-      });
+      notify("error", "Error Delete Post");
     }
   },
   getOnePost: async (postID: string) => {
@@ -231,30 +145,15 @@ export const usePostStore = create<IUsePost>((set) => ({
         .maybeSingle();
       if (getError) {
         set({ error: "Error Get One Post", isLoading: false });
-        toast.error("Error Get One Post", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", getError?.message || "Error Get One Post");
         throw getError;
       }
       set({ posts: [onePostData], isLoading: false, error: null });
       return [onePostData];
     } catch (error) {
       console.log(error);
-      toast.error("Error Get One Post", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "Something went wrong",
-        duration: 5000,
-      });
+      set({ error: error as string, isLoading: false });
+      notify("error", "Error Get One Post");
     }
   },
   updatePost: async (
@@ -274,15 +173,7 @@ export const usePostStore = create<IUsePost>((set) => ({
           });
         if (uploadError) {
           set({ error: "Error Create Post", isLoading: false });
-          toast.error("Error Create Post", {
-            style: {
-              background: "var(--danger-300)",
-              border: "1px solid var(--danger-500)",
-              color: "#fff",
-            },
-            description: uploadError?.message || "Something went wrong",
-            duration: 5000,
-          });
+         notify("error", uploadError?.message || "Error Create Post");
           throw uploadError;
         }
         const { data: publicUrlData } = supabase.storage
@@ -302,40 +193,17 @@ export const usePostStore = create<IUsePost>((set) => ({
         .single();
       if (updateError) {
         set({ error: "Error Update Post", isLoading: false });
-        toast.error("Error Update Post", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", updateError?.message || "Error Update Post");
         throw updateError;
       }
-      toast.success("Post Successfully Updated", {
-        style: {
-          background: "var(--success-300)",
-          border: "1px solid var(--success-500)",
-          color: "#fff",
-        },
-        duration: 3000,
-      });
+      notify("success", "Post Successfully Updated");
       set({ posts: updateData, isLoading: false, error: null });
 
       return updateData || null;
     } catch (error: any) {
       console.log(error);
       set({ error: error as string, isLoading: false });
-      toast.error("Error Update Post", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "Something went wrong",
-        duration: 5000,
-      });
+      notify("error", "Error Update Post");
     }
   },
   getUserPostById: async (postID: string) => {
@@ -349,15 +217,7 @@ export const usePostStore = create<IUsePost>((set) => ({
         .order("created_at", { ascending: false });
       if (error) {
         set({ error: "Error Get User Posts", isLoading: false });
-        toast.error("Error Get User Posts", {
-          style: {
-            background: "var(--danger-300)",
-            border: "1px solid var(--danger-500)",
-            color: "#fff",
-          },
-          description: "Something went wrong",
-          duration: 5000,
-        });
+        notify("error", error?.message || "Error Get User Posts");
         throw error;
       }
       set({ posts: data, isLoading: false, error: null });
@@ -365,15 +225,7 @@ export const usePostStore = create<IUsePost>((set) => ({
     } catch (error) {
       console.log(error);
       set({ error: error as string, isLoading: false });
-      toast.error("Error Get User Posts", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        description: "Something went wrong",
-        duration: 5000,
-      });
+      notify("error", "Error Get User Posts");
     }
   },
 }));
