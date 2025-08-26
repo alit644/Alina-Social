@@ -18,8 +18,8 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <App />
-        <Toaster />
       </ThemeProvider>
+      <Toaster />
     </QueryClientProvider>
   </StrictMode>
 );

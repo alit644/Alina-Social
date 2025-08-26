@@ -18,10 +18,10 @@ const UserProfile = () => {
   }
 
   
-  const { getUserPostById, isLoading: userPost } = usePostStore();
+  const { getUserPostById } = usePostStore();
   const { getUserProfileById, isLoading: userProfileLoading } = useProfileStore();
 
-  const { data: profileData } = useQuery({
+  const { data: profileData , isLoading: userPost } = useQuery({
     queryKey: ["user-profile", userID],
     queryFn: async () => {
       const data = await getUserProfileById(userID || "");

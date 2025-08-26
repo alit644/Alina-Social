@@ -19,12 +19,13 @@ const SuggestedFriendCard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["friends"],
     queryFn: async () => {
-      const data = await getRandomFriends();
+      const data = await getRandomFriends(6);
       return data;
     },
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5,
     refetchInterval: 1000 * 60 * 5,
+    
   });
 
   const renderFriend = data?.map((friend: IFriend) => {

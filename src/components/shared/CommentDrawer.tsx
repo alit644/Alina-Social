@@ -20,7 +20,7 @@ const CommentDrawer = () => {
   // get user profile
   const { userProfile } = useAuthStore();
 
-  const { data: comments, isFetching } = useQuery({
+  const { data: comments, isFetching  } = useQuery({
     queryKey: ["comments", openCommentDrawerId],
     queryFn: async () => await getComments(openCommentDrawerId || ""),
     staleTime: 1000 * 60 * 5,

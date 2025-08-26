@@ -13,7 +13,7 @@ interface IFriendsStore {
   isLoading: boolean;
   error: string | null;
   friends: IFriend[];
-  getRandomFriends: () => Promise<IFriend[]>;
+  getRandomFriends: (limit: number) => Promise<IFriend[]>;
   addFriend: (receiver_id: string) => Promise<void>;
   IncomingRequests: () => Promise<IFriendRequest[]>;
   confirmRequest: (requestId: string) => Promise<void>;
@@ -30,8 +30,7 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
   isLoading: false,
   error: null,
   friends: [],
-  //TODO : خطأ عند جلب الاصدقاء
-  getRandomFriends: async () => {
+  getRandomFriends: async (limit = 6) => {
     set({ isLoading: true, error: null });
     try {
       const userID = await getUserId();
@@ -50,13 +49,19 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
         friendsData?.map((fr) =>
           fr.sender_id === userID ? fr.receiver_id : fr.sender_id
         ) || [];
+      // .not("id", "in", `(${friendIds.join(",") || "null"})`)
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("profiles")
         .select("id,username, avatar_url, full_name")
         .not("id", "eq", userID)
-        .not("id", "in", `(${friendIds.join(",") || "null"})`)
-        .limit(8);
+        .limit(limit);
+
+      if (friendIds.length > 0) {
+        query = query.not("id", "in", `(${friendIds.join(",")})`);
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
       set({ friends: data, isLoading: false, error: null });
       return data;
@@ -125,8 +130,15 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
         .eq("receiver_id", userID)
         .eq("status", "pending");
       if (error) throw error;
+      const mappedData =
+        data?.map((item) => ({
+          id: item.id,
+          status: item.status,
+          created_at: item.created_at,
+          sender: Array.isArray(item.sender) ? item.sender[0] : item.sender,
+        })) ?? [];
       set({ isLoading: false, error: null });
-      return data;
+      return mappedData;
     } catch (error) {
       console.log(error);
       notify("error", "Error Get Incoming Requests");
@@ -198,8 +210,17 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
         .eq("sender_id", userID)
         .eq("status", "pending");
       if (error) throw error;
+      const mappedData =
+        data?.map((item) => ({
+          id: item.id,
+          status: item.status,
+          created_at: item.created_at,
+          receiver: Array.isArray(item.receiver)
+            ? item.receiver[0]
+            : item.receiver,
+        })) ?? [];
       set({ isLoading: false, error: null });
-      return data;
+      return mappedData;
     } catch (error) {
       console.log(error);
       notify("error", "Error Get Outgoing Requests");

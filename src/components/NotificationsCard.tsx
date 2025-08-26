@@ -1,5 +1,6 @@
 import type { INotification } from "@/interfaces";
 import MAvatar from "./shared/MAvatar";
+import dayjs from "@/helper/dayjs";
 interface INotificationsCard {
   data: INotification;
 }
@@ -20,8 +21,16 @@ const NotificationsCard = ({ data }: INotificationsCard) => {
           <p className="text-sm text-[var(--neutral-600)]">{data?.content}</p>
         </div>
       </div>
-      {/* time */}
-      <span className="text-[var(--neutral-500)]">{data?.created_at}</span>
+      <div className="flex items-center gap-2">
+        {/* time */}
+        <span className="text-[var(--neutral-500)]">
+          {dayjs(data?.created_at).fromNow()}
+        </span>
+        {/* is read */}
+        {!data?.is_read&& (
+          <span className="size-2 rounded-full bg-[var(--primary-900)]" />
+        )}
+      </div>
     </div>
   );
 };

@@ -10,10 +10,10 @@ import { MDropddownMenu } from "@/components/shared/MDropddownMenu";
 import PostSkeleton from "@/components/shared/PostSkeleton";
 import NoResults from "@/components/shared/NoResults";
 const MyPosts = () => {
-  const { getUserPosts, isLoading } = usePostStore();
+  const { getUserPosts } = usePostStore();
   const { userProfile } = useAuthStore();
   const { setAlertPostId } = useAlertDialogStore();
-  const { data, error } = useQuery({
+  const { data, error , isLoading } = useQuery({
     queryKey: ["posts", "post"],
     queryFn: async () => {
       const data = await getUserPosts();

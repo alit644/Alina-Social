@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { useAuthStore } from "./Auth/useAuthStore";
 import supabase from "@/supabase";
 import notify from "@/helper/notify";
+import getUserId from "@/helper/getUserId";
 interface IUsePost {
   posts: IPost[] | undefined | null;
   isLoading: boolean;
@@ -13,7 +14,10 @@ interface IUsePost {
     image_url?: string | File;
   }) => Promise<{ content: string; image_url?: string | File } | undefined>;
   getUserPosts: () => Promise<IPost[] | undefined>;
-  getAllPosts: () => Promise<IPost[] | undefined>;
+  getAllPosts: (
+    page: number,
+    pageSize: number
+  ) => Promise<{ data: IPost[]; nextPage: number | undefined, currentPage: number } | undefined>;
   deletePost: (postID: string) => Promise<void>;
   getOnePost: (postID: string) => Promise<IPost[] | undefined>;
   updatePost: (
@@ -74,69 +78,69 @@ export const usePostStore = create<IUsePost>((set) => ({
       notify("error", "Error Create Post");
     }
   },
+  // get user posts (My Posts)
   getUserPosts: async () => {
-    set({ isLoading: true, error: null });
     try {
+     const userID = await getUserId()
       const { data, error } = await supabase
         .from("posts")
         .select("*")
-        .eq("user_id", useAuthStore.getState().user?.id)
+        .eq("user_id", userID)
         .limit(10)
         .order("created_at", { ascending: false });
       if (error) {
-        set({ error: "Error Get User Posts", isLoading: false });
         notify("error", error?.message || "Error Get User Posts");
         throw error;
       }
-      set({ posts: data, isLoading: false, error: null });
       return data;
     } catch (error) {
-      set({ error: error as string, isLoading: false });
+      console.log(error)
       notify("error", "Error Get User Posts");
     }
   },
-  getAllPosts: async () => {
+  getAllPosts: async (page = 1, pageSize = 4) => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize - 1; // Adjusted to be inclusive
     set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase
         .from("posts")
         .select("*, profiles!fk_user (avatar_url, full_name, username)")
-        .limit(10)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .range(start, end);
       if (error) {
         set({ error: "Error Get All Posts", isLoading: false });
         notify("error", error?.message || "Error Get All Posts");
         throw error;
       }
       set({ posts: data, isLoading: false, error: null });
-      return data;
+      return {
+        data,
+        nextPage: data.length === pageSize ? page + 1 : undefined,
+        currentPage: page,
+      };
     } catch (error) {
       set({ error: error as string, isLoading: false });
       notify("error", "Error Get All Posts");
     }
   },
   deletePost: async (postID: string) => {
-    set({ isLoading: true, error: null });
     try {
       const { error: deleteError } = await supabase
         .from("posts")
         .delete()
         .eq("id", postID);
       if (deleteError) {
-        set({ error: "Error Delete Post", isLoading: false });
         notify("error", deleteError?.message || "Error Delete Post");
         throw deleteError;
       }
-      set({ isLoading: false, error: null });
       notify("success", "Post Successfully Deleted");
     } catch (error) {
       console.log(error);
-      set({ error: error as string, isLoading: false });
       notify("error", "Error Delete Post");
     }
   },
   getOnePost: async (postID: string) => {
-    set({ isLoading: true, error: null });
     try {
       const { data: onePostData, error: getError } = await supabase
         .from("posts")
@@ -144,15 +148,12 @@ export const usePostStore = create<IUsePost>((set) => ({
         .eq("id", postID)
         .maybeSingle();
       if (getError) {
-        set({ error: "Error Get One Post", isLoading: false });
         notify("error", getError?.message || "Error Get One Post");
         throw getError;
       }
-      set({ posts: [onePostData], isLoading: false, error: null });
       return [onePostData];
     } catch (error) {
       console.log(error);
-      set({ error: error as string, isLoading: false });
       notify("error", "Error Get One Post");
     }
   },
@@ -173,7 +174,7 @@ export const usePostStore = create<IUsePost>((set) => ({
           });
         if (uploadError) {
           set({ error: "Error Create Post", isLoading: false });
-         notify("error", uploadError?.message || "Error Create Post");
+          notify("error", uploadError?.message || "Error Create Post");
           throw uploadError;
         }
         const { data: publicUrlData } = supabase.storage
@@ -207,7 +208,6 @@ export const usePostStore = create<IUsePost>((set) => ({
     }
   },
   getUserPostById: async (postID: string) => {
-    set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase
         .from("posts")
@@ -216,15 +216,12 @@ export const usePostStore = create<IUsePost>((set) => ({
         .limit(10)
         .order("created_at", { ascending: false });
       if (error) {
-        set({ error: "Error Get User Posts", isLoading: false });
         notify("error", error?.message || "Error Get User Posts");
         throw error;
       }
-      set({ posts: data, isLoading: false, error: null });
       return data;
     } catch (error) {
       console.log(error);
-      set({ error: error as string, isLoading: false });
       notify("error", "Error Get User Posts");
     }
   },

@@ -213,6 +213,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
         .select("*")
         .eq("id", userID)
         .maybeSingle();
+
       if (error) throw error;
       set({ userProfile: data, isLoading: false, error: null });
     } catch (error) {

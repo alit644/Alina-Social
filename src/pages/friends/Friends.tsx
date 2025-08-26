@@ -9,6 +9,7 @@ import type { IMFriend } from "@/interfaces";
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router";
 const Friends = () => {
   const { getMyFriends, unFollow, isLoading } = useFriendsStore();
   const queryClient = useQueryClient();
@@ -33,19 +34,22 @@ const Friends = () => {
       className="flex justify-between items-center gap-3 not-last:mb-4 "
       key={item.id}
     >
-      <div className={`flex items-center gap-2 `}>
-        <MAvatar
-          src={item?.avatar_url || ""}
-          name={item?.full_name || ""}
-          className="size-[50px]"
-        />
-        <div className="flex flex-col">
-          <h3 className="text-md sm:text-lg font-semibold">
-            {item?.full_name}{" "}
-          </h3>
-          <p className="text-sm text-gray-500">@{item?.username}</p>
+      <Link to={`/user/${item.id}`} className="flex-1">
+        <div className={`flex items-center gap-2 `}>
+          <MAvatar
+            src={item?.avatar_url || ""}
+            name={item?.full_name || ""}
+            className="size-[50px]"
+          />
+          <div className="flex flex-col">
+            <h3 className="text-md sm:text-lg font-semibold">
+              {item?.full_name}{" "}
+            </h3>
+            <p className="text-sm text-gray-500">@{item?.username}</p>
+          </div>
         </div>
-      </div>
+      </Link>
+
       {/* accept and reject */}
       <div className="flex items-center gap-2">
         <Button
