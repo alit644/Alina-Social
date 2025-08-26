@@ -6,6 +6,7 @@ import { Trash } from "lucide-react";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { useCommentStore } from "@/store/useComment";
 import { useQueryClient } from "@tanstack/react-query";
+import dayjs from "@/helper/dayjs";
 interface ICommentCard {
   name: string;
   userName: string;
@@ -58,7 +59,7 @@ const CommentCard = ({
           )}
           {/* time */}
           <p className="text-[var(--neutral-500)]">
-            {createdAt?.split("T")[0]}
+            {dayjs(createdAt).fromNow()}
           </p>
         </div>
       </div>{" "}

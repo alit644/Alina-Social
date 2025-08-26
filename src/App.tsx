@@ -6,16 +6,27 @@ import PageLoader from "./components/ui/PageLoader";
 import { AuthContextProvider } from "./context/AuthProvider";
 import MAlertDialog from "@/components/shared/MAlertDialog";
 import { MDialog } from "@/components/shared/MDialog";
-import { useLikeStore } from "@/store/useLikes";
 import CommentDrawer from "./components/shared/CommentDrawer";
+import { useNotificationStore } from "./store/useNotifications";
+import getUserId from "./helper/getUserId";
 function App() {
   const { fetchUser, isLoading, getUserProfile } = useAuthStore();
-  const { resetLikes } = useLikeStore();
+  const { subscribeToNotifications } = useNotificationStore();
   useEffect(() => {
     fetchUser();
     getUserProfile();
-    return () => {};
-  }, [fetchUser, getUserProfile, resetLikes]);
+  }, [fetchUser, getUserProfile]);
+
+  useEffect(() => {
+    const subscribe = async () => {
+      const id = await getUserId();
+      if (id) {
+        subscribeToNotifications(id);
+      }
+    };
+    subscribe();
+    
+  }, [subscribeToNotifications]);
 
   if (isLoading) return <PageLoader />;
 

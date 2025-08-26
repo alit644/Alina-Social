@@ -41,14 +41,12 @@ export const useCommentStore = create<ICommentStore>((set) => ({
     }
   },
   getComments: async (postID: string) => {
-    set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase
         .from("comments")
         .select("*, profiles (id,avatar_url, full_name, username)")
         .eq("post_id", postID);
       if (error) throw error;
-      set({ isLoading: false, error: null });
       return data;
     } catch (error: any) {
       notify("error", error?.message || "Something went wrong");

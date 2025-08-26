@@ -10,9 +10,9 @@ const AllFriends = () => {
   const { getRandomFriends } = useFriendsStore();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["friends"],
+    queryKey: ["friends" , "all"],
     queryFn: async () => {
-      const data = await getRandomFriends();
+      const data = await getRandomFriends(10);
       return data;
     },
     refetchOnWindowFocus: false,

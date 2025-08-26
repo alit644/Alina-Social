@@ -13,7 +13,7 @@ const PostContent = ({ content, image_url }: IPostContent) => {
         loading="lazy"
           src={`${image_url}`}
           alt="Post main Image "
-          className="w-full rounded-md max-h-[400px] object-cover"
+          className="w-full rounded-md max-h-[400px] object-cover select-none"
           aria-label="post-image"
         />
       )}

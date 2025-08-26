@@ -25,7 +25,7 @@ interface IFormInput {
   postContent: string;
   postImage?: File | string | null;
 }
-//TODO : عند اتمام علمبلة تحديث المنتج اعمل على تحديث المنتج في الواجهة 
+//TODO : عند اتمام علمبلة تحديث المنتج اعمل على تحديث المنتج في الواجهة
 export const MDialog = () => {
   const { openDialogId, setOpenDialogId } = useAlertDialogStore();
   const queryClient = useQueryClient();
@@ -60,7 +60,7 @@ export const MDialog = () => {
   // update Mutation
   const mutation = useMutation({
     mutationFn: async (data: IFormInput) => {
-     await updatePost(openDialogId || "", {
+      await updatePost(openDialogId || "", {
         content: data.postContent || "",
         image_url: data.postImage,
       });

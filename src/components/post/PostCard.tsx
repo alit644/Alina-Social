@@ -19,6 +19,7 @@ interface IPostCard {
   avatar?: string;
   userID?: string;
   postID?: string;
+  children?: React.ReactNode;
 }
 const PostCard = ({
   createdAt,
@@ -29,6 +30,7 @@ const PostCard = ({
   avatar,
   userID,
   postID,
+  children
 }: IPostCard) => {
   // get user profile
   const { userProfile } = useAuthStore();
@@ -44,6 +46,7 @@ const PostCard = ({
           avatar={avatar}
           userID={userID}
           postID={postID}
+          children={children}
         />
       </CardHeader>
       <CardContent className="flex flex-col gap-6  ">

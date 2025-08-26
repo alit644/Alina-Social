@@ -1,6 +1,8 @@
 import MAvatar from "@/components/shared/MAvatar";
+import dayjs from "@/helper/dayjs";
 import { memo } from "react";
 import { Link } from "react-router";
+
 interface PostHeaderProps {
   createdAt: string;
   add?: boolean;
@@ -10,6 +12,7 @@ interface PostHeaderProps {
   avatar?: string;
   userID?: string;
   postID?: string;
+  children?: React.ReactNode;
 }
 const PostHeader = ({
   createdAt,
@@ -17,7 +20,8 @@ const PostHeader = ({
   name,
   userName,
   avatar,
-  userID
+  userID,
+  children,
 }: PostHeaderProps) => {
   return (
     <article
@@ -38,11 +42,10 @@ const PostHeader = ({
       </Link>
       {/* options */}
       <div className="flex flex-col items-end">
-        <>
-          <p className="text-[var(--neutral-400)]">
-            {createdAt?.split("T")[0]}
-          </p>
-        </>
+        {children}
+        <p className="text-[var(--neutral-400)]">
+          {dayjs(createdAt).fromNow()}
+        </p>
       </div>
     </article>
   );

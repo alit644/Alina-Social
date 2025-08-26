@@ -9,11 +9,13 @@ const PostFooter = ({ postID, userID }: { postID: string; userID: string }) => {
   const { toggleLike, fetchLikes, likes, subscribeToLikes } = useLikeStore();
   const { setOpenCommentDrawerId } = useAlertDialogStore();
   useEffect(() => {
-    fetchLikes(postID);
-    const channel = subscribeToLikes(postID);
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    if (postID) {
+      fetchLikes(postID);
+      const channel = subscribeToLikes(postID);
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [postID, fetchLikes, subscribeToLikes]);
   const postsLikes = likes[postID] || { isLiked: false, count: 0 };
 
