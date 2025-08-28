@@ -8,31 +8,32 @@ import { useAlertDialogStore } from "@/store/useAlertDialog";
 import CommentCard from "../post/CommentCard";
 import AddComment from "../post/AddComment";
 import { memo, useCallback } from "react";
-import { useCommentStore } from "@/store/useComment";
-import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { Skeleton } from "../ui/skeleton";
 import NoResults from "./NoResults";
+import useGetComments from "@/hooks/comments/use-get-comments";
+import { Button } from "../ui/button";
 
 const CommentDrawer = () => {
   const { openCommentDrawerId, setOpenCommentDrawerId } = useAlertDialogStore();
-  const { getComments } = useCommentStore();
   // get user profile
   const { userProfile } = useAuthStore();
 
-  const { data: comments, isFetching  } = useQuery({
-    queryKey: ["comments", openCommentDrawerId],
-    queryFn: async () => await getComments(openCommentDrawerId || ""),
-    staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5,
-    enabled: !!openCommentDrawerId,
-  });
-
+  const {
+    data: comments,
+    isFetching,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetComments(openCommentDrawerId || "");
+  const infiniteDataComments = comments?.pages.flatMap(
+    (page) => page?.data ?? []
+  );
   const onClose = useCallback(() => {
     setOpenCommentDrawerId(null);
   }, [setOpenCommentDrawerId]);
 
-  const renderComments = comments?.map((comment) => {
+  const renderComments = infiniteDataComments?.map((comment) => {
     return (
       <CommentCard
         key={comment.id}
@@ -57,11 +58,28 @@ const CommentDrawer = () => {
           </DrawerHeader>
           <div className="p-4 pb-0">
             <div className="flex flex-col gap-2">
-              {comments?.length !== undefined && comments?.length > 0 ? (
+              {infiniteDataComments?.length !== undefined &&
+              infiniteDataComments?.length > 0 ? (
                 renderComments
               ) : (
                 <NoResults />
               )}
+              {hasNextPage && (
+                <Button
+                  className="w-full mt-4 dark:bg-gray-800 dark:text-white"
+                  onClick={() => fetchNextPage()}
+                >
+                  {isFetchingNextPage ? "Loading..." : "Load More"}
+                </Button>
+              )}
+              {!hasNextPage &&
+                !isFetching &&
+                infiniteDataComments?.length !== undefined &&
+                infiniteDataComments?.length > 0 && (
+                  <div className="text-center py-6 text-muted-foreground text-sm">
+                    You&apos;ve reached the end!
+                  </div>
+                )}
             </div>
           </div>
         </div>

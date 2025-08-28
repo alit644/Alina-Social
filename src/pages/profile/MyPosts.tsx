@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { MDropddownMenu } from "@/components/shared/MDropddownMenu";
 import PostSkeleton from "@/components/shared/PostSkeleton";
 import NoResults from "@/components/shared/NoResults";
-import useUserPosts from "@/hooks/use-user-posts";
+import useUserPosts from "@/hooks/posts/use-user-posts";
 const MyPosts = () => {
   const { setAlertPostId } = useAlertDialogStore();
   const {

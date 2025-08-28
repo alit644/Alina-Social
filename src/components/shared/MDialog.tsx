@@ -19,8 +19,8 @@ import { Form, FormMessage } from "@/components/ui/form";
 import { Images, X } from "lucide-react";
 import PageLoader from "../ui/PageLoader";
 import notify from "@/helper/notify";
-import useGetPost from "@/hooks/use-post";
-import useUpdatePost from "@/hooks/use-update-post";
+import useGetPost from "@/hooks/posts/use-post";
+import useUpdatePost from "@/hooks/posts/use-update-post";
 interface IFormInput {
   postContent: string;
   postImage?: File | string | null;

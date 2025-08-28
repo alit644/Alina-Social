@@ -4,22 +4,16 @@ import NoResults from "@/components/shared/NoResults";
 import MAvatar from "@/components/shared/MAvatar";
 import { Button } from "@/components/ui/button";
 import { useFriendsStore } from "@/store/useFriends";
-import { useQuery } from "@tanstack/react-query";
 import type { IMFriend } from "@/interfaces";
 import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router";
+import useGetMyFriends from "@/hooks/friends/use-my-friends";
 const Friends = () => {
-  const { getMyFriends, unFollow, isLoading } = useFriendsStore();
+  const {  unFollow } = useFriendsStore();
   const queryClient = useQueryClient();
-  const { data: friendsData } = useQuery({
-    queryKey: ["my-friends"],
-    queryFn: async () => {
-      const data = await getMyFriends();
-      return data;
-    },
-  });
+  const { data: friendsData , isLoading } = useGetMyFriends()
 
   const handleUnFollow = useCallback(
     async (friend_request_id: string) => {

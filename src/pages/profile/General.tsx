@@ -5,13 +5,13 @@ import { GENERAL_INPUTS } from "@/data";
 import { FormItem, FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useProfileStore } from "@/store/useProfile";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { useRef, useCallback, useEffect } from "react";
 import { Loader, X } from "lucide-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {  useQueryClient } from "@tanstack/react-query";
 import PageLoader from "@/components/ui/PageLoader";
-import { toast } from "sonner";
+import useUpdateProfile from "@/hooks/profile/use-update-profile";
+import useGetUserProfile from "@/hooks/profile/use-get-userProfile";
 interface IGeneral {
   full_name: string;
   username: string;
@@ -22,35 +22,18 @@ interface IGeneral {
 const General = () => {
   const form = useForm<IGeneral>();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { updateProfile, isLoading, getUserProfile } = useProfileStore();
   const { userProfile } = useAuthStore();
+  const {mutateAsync , isPending: updateProfileLoading} = useUpdateProfile()
   const queryClient = useQueryClient();
-  //TODO: اضافاة disabled في حال لم تتم تغير الداتا
   // get user profile
-  const { data: profileData, isLoading: profileLoading } = useQuery({
-    queryKey: ["profile", userProfile?.id],
-    queryFn: async () => {
-      const data = await getUserProfile(userProfile?.id || "");
-      return data;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: 60 * 60 * 2,
-    refetchInterval: 60 * 60 * 2,
-  });
+  const { data: profileData, isLoading: profileLoading } = useGetUserProfile(userProfile?.id || "")
   const onSubmit: SubmitHandler<IGeneral> = async (data) => {
     try {
-      await updateProfile(data);
+      await mutateAsync(data);
       queryClient.invalidateQueries({ queryKey: ["profile", userProfile?.id] });
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        duration: 5000,
-      });
+      throw error
     }
   };
 
@@ -82,7 +65,6 @@ const General = () => {
       <FormMessage>{form.formState.errors[input.name]?.message}</FormMessage>
     </FormItem>
   ));
-  //TODO: في حال تغير صورة لا يزال الزر يبقى غير مفعل
 
   if (profileLoading) return <PageLoader />;
   return (
@@ -172,13 +154,13 @@ const General = () => {
             variant={"neutral"}
             aria-label="Login"
             disabled={
-              isLoading ||
+             updateProfileLoading ||
               form.formState.isSubmitting ||
               !form.formState.isDirty
             }
             title={!form.formState.isDirty ? "No changes to save" : undefined}
           >
-            {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+            {updateProfileLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
             {form.formState.isDirty ? "Save Changes" : "No changes to save"}
           </Button>
         </form>

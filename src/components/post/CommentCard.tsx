@@ -4,9 +4,8 @@ import { memo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
-import { useCommentStore } from "@/store/useComment";
-import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "@/helper/dayjs";
+import useDeleteComment from "@/hooks/comments/use-delete-comment";
 interface ICommentCard {
   name: string;
   userName: string;
@@ -27,12 +26,10 @@ const CommentCard = ({
   commentID,
 }: ICommentCard) => {
   const { userProfile } = useAuthStore();
-  const { deleteComment, isLoading } = useCommentStore();
-  const queryClient = useQueryClient();
+  const { mutateAsync , isPending } = useDeleteComment();
   const handleDeleteComment = useCallback(async () => {
-    await deleteComment(commentID);
-    queryClient.invalidateQueries({ queryKey: ["comments"] });
-  }, [commentID, deleteComment, queryClient]);
+    await mutateAsync(commentID);
+  }, [commentID, mutateAsync]);
 
   return (
     <Card className="w-full bg-muted rounded-md shadow-none border-0 p-4 mt-4">
@@ -51,7 +48,7 @@ const CommentCard = ({
               variant="ghost"
               className="hover:bg-[var(--danger-50)]"
               size="icon"
-              disabled={isLoading}
+              disabled={isPending}
               onClick={handleDeleteComment}
             >
               <Trash className="h-5 w-5 text-[var(--neutral-500)]" />

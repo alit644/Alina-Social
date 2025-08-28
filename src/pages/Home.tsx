@@ -7,13 +7,15 @@ import NoResults from "@/components/shared/NoResults";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import supabase from "@/supabase";
-import useGetAllPosts from "@/hooks/use-all-posts";
+import useGetAllPosts from "@/hooks/posts/use-all-posts";
 const Home = () => {
   //TODO: search user 11 part(four) Realtime
   //!=====================================
   //TODO: Message 12 part(five) Realtime
   //!=====================================
   //TODO: svg تعامل مع ايقونات  
+  //!=====================================
+  //TODO: errors التعامل مع  
 
   useEffect(() => {
     const channel = usePostStore.getState().subscribeToLikes();

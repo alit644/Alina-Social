@@ -3,14 +3,14 @@ import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import MAvatar from "./MAvatar";
 import type { IFriend } from "@/interfaces";
-import { useFriendsStore } from "@/store/useFriends";
 import { Link } from "react-router";
+import useAddFriend from "@/hooks/friends/use-add-friend";
 
 const FriendsCard = ({ data }: { data: IFriend }) => {
-  const { addFriend, isLoading } = useFriendsStore();
+  const { mutateAsync, isPending } = useAddFriend(data.id);
   const handleAddFriend = useCallback(async () => {
-    await addFriend(data.id);
-  }, [data.id, addFriend]);
+    await mutateAsync();
+  }, [mutateAsync]);
 
   return (
     <article
@@ -33,9 +33,9 @@ const FriendsCard = ({ data }: { data: IFriend }) => {
         <Button
           variant="ghost"
           size="icon"
-          className="text-end bg-[var(--neutral-50)] hover:bg-[var(--neutral-100)] animate-accordion-up"
+          className="text-end bg-[var(--neutral-50)] hover:bg-[var(--neutral-100)] animate-accordion-up disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleAddFriend}
-          disabled={isLoading}
+          disabled={isPending}
         >
           <Plus className="h-5 w-5 text-[var(--neutral-500)] hover:text-[var(--primary-900)]" />
         </Button>

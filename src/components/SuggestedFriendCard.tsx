@@ -6,30 +6,20 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import FriendsCard from "./shared/FriendsCard";
-import { useFriendsStore } from "@/store/useFriends";
-import { useQuery } from "@tanstack/react-query";
 import type { IFriend } from "@/interfaces";
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
 import { Link } from "react-router";
+import useGetFriends from "@/hooks/friends/use-get-friends";
 
 const SuggestedFriendCard = () => {
-  const { getRandomFriends } = useFriendsStore();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["friends"],
-    queryFn: async () => {
-      const data = await getRandomFriends(6);
-      return data;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5,
-    
-  });
+  const { data, isLoading } = useGetFriends(6);
 
-  const renderFriend = data?.map((friend: IFriend) => {
-    return <FriendsCard key={friend.id} data={friend} />;
+  const renderFriend = data?.pages?.map((page) => {
+    return page.data.map((friend: IFriend) => {
+      return <FriendsCard key={friend.id} data={friend} />;
+    });
   });
 
   return (
