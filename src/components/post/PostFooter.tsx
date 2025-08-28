@@ -1,23 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
-import { useLikeStore } from "@/store/useLikes";
-import { memo, useEffect } from "react";
-import supabase from "@/supabase";
+import { memo } from "react";
 import { useAlertDialogStore } from "@/store/useAlertDialog";
+import { useToggleLike } from "@/hooks/useToggleLike";
 
-const PostFooter = ({ postID, userID }: { postID: string; userID: string }) => {
-  const { toggleLike, fetchLikes, likes, subscribeToLikes } = useLikeStore();
+const PostFooter = ({
+  postID,
+  likes_count,
+  isLike,
+}: {
+  postID: string;
+  author_id: string;
+  likes_count: number;
+  isLike: boolean;
+}) => {
+  const toggleLikeMut = useToggleLike();
+
   const { setOpenCommentDrawerId } = useAlertDialogStore();
-  useEffect(() => {
-    if (postID) {
-      fetchLikes(postID);
-      const channel = subscribeToLikes(postID);
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-  }, [postID, fetchLikes, subscribeToLikes]);
-  const postsLikes = likes[postID] || { isLiked: false, count: 0 };
 
   const handleComment = () => {
     setOpenCommentDrawerId(postID);
@@ -38,13 +37,14 @@ const PostFooter = ({ postID, userID }: { postID: string; userID: string }) => {
         <Button
           variant="ghost"
           size="icon"
-          title={postsLikes.isLiked ? "Unlike" : "Like"}
+          title={isLike ? "Unlike" : "Like"}
           aria-label="Like"
           onClick={() => {
-            toggleLike(postID, userID);
+            // toggleLike(postID, author_id);
+            toggleLikeMut.mutate({ postID, wasLiked: isLike });
           }}
         >
-          {postsLikes.isLiked ? (
+          {isLike ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -71,7 +71,7 @@ const PostFooter = ({ postID, userID }: { postID: string; userID: string }) => {
           )}{" "}
         </Button>
         <p className="text-xs text-gray-500 dark:text-gray-300">
-          {postsLikes.count}
+          {likes_count}
         </p>
       </div>
     </div>

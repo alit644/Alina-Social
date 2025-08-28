@@ -9,42 +9,31 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Form, FormItem, FormControl, FormMessage } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addPostSchema } from "@/schema";
-import { usePostStore } from "@/store/usePost";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import useCreatePost from "@/hooks/use-create-post";
+import notify from "@/helper/notify";
 interface IFormInput {
   postContent: string;
-  postImage?: File | string;
+  postImage?: File | string | null;
 }
 const AddPostCard = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { userProfile } = useAuthStore();
-  const { createPost,isLoading } = usePostStore();
-  const queryClient = useQueryClient();
   const form = useForm<IFormInput>({
     resolver: zodResolver(addPostSchema),
   });
+
+  const postMutation = useCreatePost(form);
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-   try {
-    await createPost({
-      content: data.postContent,
-      image_url: data.postImage,
-    });
-    queryClient.invalidateQueries({ queryKey: ["posts"] });
-   
-     form.reset();
-   } catch (error) {
-    console.log(error)
-    toast.error("Error Create Post", {
-      style: {
-        background: "var(--danger-300)",
-        border: "1px solid var(--danger-500)",
-        color: "#fff",
-      },
-      duration: 5000,
-     });
-    
-   }
+    try {
+      await postMutation.mutateAsync({
+        content: data.postContent,
+        image_url: data.postImage || undefined,
+      });
+    } catch (error) {
+      notify("error", "Error Create Post");
+      throw error;
+    }
   };
   const handleAddImage = useCallback(() => {
     inputRef.current?.click();
@@ -93,9 +82,16 @@ const AddPostCard = () => {
               <Button variant="ghost" type="button" onClick={handleAddImage}>
                 <Images className="h-4 w-4 mr-2" /> Add Photo
               </Button>
-              <Button size={"rounded"} type="submit" disabled={isLoading}>
-               {isLoading && <Loader className="h-4 w-4 mr-2 animate-spin" />}
-               Post</Button>
+              <Button
+                size={"rounded"}
+                type="submit"
+                disabled={postMutation.isPending}
+              >
+                {postMutation.isPending && (
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                )}
+                Post
+              </Button>
             </div>
             {form.watch("postImage") && (
               <>

@@ -15,26 +15,29 @@ interface IPostCard {
   content: string;
   image_url?: string;
   name?: string;
-  userName?: string;
-  avatar?: string;
-  userID?: string;
+  author_name?: string;
+  author_avatar?: string;
+  author_id?: string;
   postID?: string;
   children?: React.ReactNode;
+  isLike?: boolean;
+  likes_count?: number;
 }
 const PostCard = ({
   createdAt,
   content,
   image_url,
   name,
-  userName,
-  avatar,
-  userID,
+  author_avatar,
+  author_id,
   postID,
-  children
+  children,
+  isLike,
+  likes_count
 }: IPostCard) => {
   // get user profile
   const { userProfile } = useAuthStore();
-  if (!userID || !postID)
+  if (!author_id || !postID)
     return <div className="w-full h-full">Oops user or post not found...</div>;
   return (
     <Card className="mb-6 shadow-none rounded-md">
@@ -42,9 +45,9 @@ const PostCard = ({
         <PostHeader
           createdAt={createdAt}
           name={name}
-          userName={userName}
-          avatar={avatar}
-          userID={userID}
+          author_name={''}
+          author_avatar={author_avatar}
+          author_id={author_id}
           postID={postID}
           children={children}
         />
@@ -53,7 +56,7 @@ const PostCard = ({
         <PostContent content={content} image_url={image_url} />
       </CardContent>
       <CardFooter className="flex flex-col">
-        <PostFooter postID={postID || ""} userID={userID || ""} />
+        <PostFooter postID={postID || ""} author_id={author_id || ""} isLike={isLike || false} likes_count={likes_count || 0}/>
         <AddComment
           avatar={userProfile?.avatar_url || ""}
           name={userProfile?.full_name || ""}

@@ -65,6 +65,11 @@ export interface IPost {
   user_id: string;
   created_at: string;
   comment_count?: number;
+  author_name?: string;
+  author_avatar?: string;
+  author_id?: string;
+  is_liked? :boolean
+  likes_count?: number
   profiles?: {
     avatar_url: string;
     full_name: string;

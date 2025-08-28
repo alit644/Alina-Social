@@ -7,26 +7,12 @@ import { AuthContextProvider } from "./context/AuthProvider";
 import MAlertDialog from "@/components/shared/MAlertDialog";
 import { MDialog } from "@/components/shared/MDialog";
 import CommentDrawer from "./components/shared/CommentDrawer";
-import { useNotificationStore } from "./store/useNotifications";
-import getUserId from "./helper/getUserId";
 function App() {
   const { fetchUser, isLoading, getUserProfile } = useAuthStore();
-  const { subscribeToNotifications } = useNotificationStore();
   useEffect(() => {
     fetchUser();
     getUserProfile();
   }, [fetchUser, getUserProfile]);
-
-  useEffect(() => {
-    const subscribe = async () => {
-      const id = await getUserId();
-      if (id) {
-        subscribeToNotifications(id);
-      }
-    };
-    subscribe();
-    
-  }, [subscribeToNotifications]);
 
   if (isLoading) return <PageLoader />;
 

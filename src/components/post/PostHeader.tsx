@@ -8,9 +8,9 @@ interface PostHeaderProps {
   add?: boolean;
   className?: string;
   name?: string;
-  userName?: string;
-  avatar?: string;
-  userID?: string;
+  author_name?: string;
+  author_avatar?: string;
+  author_id?: string;
   postID?: string;
   children?: React.ReactNode;
 }
@@ -18,25 +18,25 @@ const PostHeader = ({
   createdAt,
   className = "",
   name,
-  userName,
-  avatar,
-  userID,
+  author_name,
+  author_avatar,
+  author_id,
   children,
 }: PostHeaderProps) => {
   return (
     <article
       className={`flex   justify-between items-center gap-2 ${className}`}
     >
-      <Link to={`/user/${userID}`}>
+      <Link to={`/user/${author_id}`}>
         <div className={`flex items-center gap-2 `}>
           <MAvatar
-            src={avatar || ""}
-            name={name || ""}
+            src={author_avatar || ""}
+            name={author_name || ""}
             className="size-[50px]"
           />
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold">{name} </h3>
-            <p className="text-sm text-gray-500">@{userName}</p>
+            <p className="text-sm text-gray-500">@{author_name}</p>
           </div>
         </div>
       </Link>
