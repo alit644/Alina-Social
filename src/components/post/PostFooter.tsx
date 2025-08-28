@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import { memo } from "react";
 import { useAlertDialogStore } from "@/store/useAlertDialog";
-import { useToggleLike } from "@/hooks/useToggleLike";
+import { useToggleLike } from "@/hooks/posts/use-toggle-like";
 
 const PostFooter = ({
   postID,

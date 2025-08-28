@@ -17,7 +17,6 @@ export const useProfileStore = create<IUseProfile>((set) => ({
   error: null,
   userProfile: null,
   updateProfile: async (data: any) => {
-    set({ isLoading: true, error: null });
     const { user, userProfile } = useAuthStore.getState();
     if (!user) return;
     try {
@@ -58,9 +57,8 @@ export const useProfileStore = create<IUseProfile>((set) => ({
       set({ userProfile: updatedProfile, isLoading: false, error: null });
 
       notify("success", "Profile Successfully Updated");
-    } catch (error) {
-      console.log(error);
-      set({ error: error as string, isLoading: false });
+    } catch (error : any) {
+      set({ error: error?.message || "Error Update Profile", isLoading: false });
      notify("error", "Error Update Profile");
     }
   },

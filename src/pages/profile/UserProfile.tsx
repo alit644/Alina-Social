@@ -1,15 +1,14 @@
 import PostCard from "@/components/post/PostCard";
 import UserProfileCard from "@/components/shared/UserProfileCard";
-import { useProfileStore } from "@/store/useProfile";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import NoResults from "@/components/shared/NoResults";
 import type { IPost } from "@/interfaces";
 import PostSkeleton from "@/components/shared/PostSkeleton";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
-import useUserPostById from "@/hooks/use-user-post";
+import useUserPostById from "@/hooks/posts/use-user-post";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import useGetProfileById from "@/hooks/profile/use-get-profileById";
 const UserProfile = () => {
   const { userID } = useParams();
   const navigate = useNavigate();
@@ -21,20 +20,8 @@ const UserProfile = () => {
     }
   }, [userProfile?.id, userID, navigate]);
 
-  const { getUserProfileById, isLoading: userProfileLoading } =
-    useProfileStore();
 
-  const { data: profileData, isLoading: userPost } = useQuery({
-    queryKey: ["user-profile", userID],
-    queryFn: async () => {
-      const data = await getUserProfileById(userID || "");
-      return data;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5,
-    enabled: !!userID,
-  });
+  const { data: profileData, isLoading: userPost } = useGetProfileById(userID || "")
 
   const { data: userPosts , hasNextPage , fetchNextPage , isFetchingNextPage , isLoading: userPostLoading } = useUserPostById(userID || "");
   const rpcInfiniteDataPost = userPosts?.pages.flatMap(
@@ -63,7 +50,7 @@ const UserProfile = () => {
       <div className="col-span-12">
         <UserProfileCard
           data={profileData !== undefined ? profileData : {}}
-          isLoadingProfile={userProfileLoading}
+          isLoadingProfile={userPost}
         />
       </div>
 

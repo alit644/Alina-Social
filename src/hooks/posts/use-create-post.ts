@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation } from "@tanstack/react-query";
-import { usePostStore } from "../store/usePost";
+import { usePostStore } from "../../store/usePost";
 import { useQueryClient } from "@tanstack/react-query";
 import notify from "@/helper/notify";
 

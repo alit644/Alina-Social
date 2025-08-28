@@ -7,8 +7,7 @@ import { Form } from "../ui/form";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useCommentStore } from "@/store/useComment";
-import { useQueryClient } from "@tanstack/react-query";
+import useAddComment from "@/hooks/comments/use-add-comment";
 interface AddCommentProps {
   avatar?: string;
   name?: string;
@@ -18,8 +17,6 @@ interface IFormInput {
   content: string;
 }
 const AddComment = ({ avatar, name, postID }: AddCommentProps) => {
- const {addComment, isLoading} = useCommentStore()
- const queryClient = useQueryClient()
   const form = useForm<IFormInput>({
     resolver: zodResolver(
       z.object({
@@ -29,12 +26,15 @@ const AddComment = ({ avatar, name, postID }: AddCommentProps) => {
       })
     ),
   });
+  const addCommentMutation = useAddComment(postID, form.getValues());
 
-
-  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    await addComment(postID, data)
-    queryClient.invalidateQueries({ queryKey: ["comments", postID , ] })
-    form.reset()
+  const onSubmit: SubmitHandler<IFormInput> = async () => {
+    try {
+      await addCommentMutation.mutateAsync();
+      form.reset();
+    } catch (error) {
+      return error;
+    }
   };
 
   return (
@@ -61,7 +61,7 @@ const AddComment = ({ avatar, name, postID }: AddCommentProps) => {
               size="icon"
               className="size-6 absolute right-4 bottom-2"
               title="Send"
-              disabled={isLoading}
+              disabled={addCommentMutation.isPending}
             >
               <Send className="w-6 h-6 text-[var(--primary-600)] hover:text-[var(--primary-900)] animate-pulse cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" />
             </Button>

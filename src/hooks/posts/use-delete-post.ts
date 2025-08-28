@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { usePostStore } from "./usePost";
+import { usePostStore } from "@/store/usePost";
 import notify from "@/helper/notify";
 import { useQueryClient } from "@tanstack/react-query";
 const useDeletePost = (postID: string) => {

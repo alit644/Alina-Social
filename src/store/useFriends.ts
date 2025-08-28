@@ -13,7 +13,11 @@ interface IFriendsStore {
   isLoading: boolean;
   error: string | null;
   friends: IFriend[];
-  getRandomFriends: (limit: number) => Promise<IFriend[]>;
+  getRandomFriends: (
+    limit: number,
+    page: number,
+    pageSize: number
+  ) => Promise<{ data: IFriend[]; nextPage: number | undefined; currentPage: number }>;
   addFriend: (receiver_id: string) => Promise<void>;
   IncomingRequests: () => Promise<IFriendRequest[]>;
   confirmRequest: (requestId: string) => Promise<void>;
@@ -30,8 +34,9 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
   isLoading: false,
   error: null,
   friends: [],
-  getRandomFriends: async (limit = 6) => {
-    set({ isLoading: true, error: null });
+  getRandomFriends: async (limit = 6, page = 1, pageSize = 6) => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize - 1;
     try {
       const userID = await getUserId();
 
@@ -49,13 +54,13 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
         friendsData?.map((fr) =>
           fr.sender_id === userID ? fr.receiver_id : fr.sender_id
         ) || [];
-      // .not("id", "in", `(${friendIds.join(",") || "null"})`)
 
       let query = supabase
         .from("profiles")
         .select("id,username, avatar_url, full_name")
         .not("id", "eq", userID)
-        .limit(limit);
+        .limit(limit)
+        .range(start, end);
 
       if (friendIds.length > 0) {
         query = query.not("id", "in", `(${friendIds.join(",")})`);
@@ -63,15 +68,21 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
 
       const { data, error } = await query;
       if (error) throw error;
-      set({ friends: data, isLoading: false, error: null });
-      return data;
+      return {
+        data,
+        nextPage: data.length === pageSize ? page + 1 : undefined,
+        currentPage: page,
+      };
     } catch (error) {
       set({ error: error as string, isLoading: false });
-      return [];
+      return {
+        data: [],
+        nextPage: undefined,
+        currentPage: page,
+      };
     }
   },
   addFriend: async (receiver_id: string) => {
-    set({ isLoading: true, error: null });
     try {
       // Current User
       const userID = await getUserId();
@@ -94,9 +105,7 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
         throw errAdd;
       }
       notify("success", "Friend Request Sent");
-      set({ isLoading: false, error: null });
     } catch (error: any) {
-      console.log(error);
       notify(
         "error",
         "Error Add Friend",
@@ -104,7 +113,7 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
           ? "Friend Request Already Sent"
           : "Something went wrong"
       );
-      set({ error: error as string, isLoading: false });
+      throw error;
     }
   },
   IncomingRequests: async () => {
@@ -147,7 +156,6 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
     }
   },
   confirmRequest: async (requestId: string) => {
-    set({ isLoading: true, error: null });
     try {
       const userID = await getUserId();
       const { error } = await supabase
@@ -161,35 +169,31 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
 
       if (error) throw error;
       notify("success", "Friend Request Accepted");
-      set({ isLoading: false, error: null });
-    } catch (error) {
-      console.log(error);
-      notify("error", "Error Accept Friend Request");
-      set({ isLoading: false, error: error as string });
+    } catch (error:any) {
+      notify("error", error?.message || "Error Accept Friend Request");
     }
   },
   rejectRequest: async (requestId: string) => {
-    set({ isLoading: true, error: null });
     try {
       const userID = await getUserId();
+      console.log("userID", userID);
+      console.log("requestId", requestId);
       const { error } = await supabase
         .from("friend_requests")
-        .delete()
+        .update({
+          status: "rejected",
+        })
         .eq("receiver_id", userID)
         .eq("id", requestId)
         .eq("status", "pending");
 
       if (error) throw error;
       notify("success", "Friend Request Rejected");
-      set({ isLoading: false, error: null });
-    } catch (error) {
-      console.log(error);
-      notify("error", "Error Reject Friend Request");
-      set({ isLoading: false, error: error as string });
+    } catch (error:any) {
+      notify("error", error?.message || "Error Reject Friend Request");
     }
   },
   outgoingRequests: async () => {
-    set({ isLoading: true, error: null });
     try {
       const userID = await getUserId();
       const { data, error } = await supabase
@@ -219,17 +223,14 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
             ? item.receiver[0]
             : item.receiver,
         })) ?? [];
-      set({ isLoading: false, error: null });
       return mappedData;
-    } catch (error) {
-      console.log(error);
-      notify("error", "Error Get Outgoing Requests");
-      set({ error: error as string, isLoading: false });
+    } catch (error:any) {
+      notify("error", error?.message || "Error Get Outgoing Requests");
       return [];
     }
   },
   cancelRequest: async (requestId: string) => {
-    set({ isLoading: true, error: null });
+
     try {
       const userID = await getUserId();
       const { error } = await supabase
@@ -242,15 +243,11 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
       if (error) throw error;
 
       notify("success", "Friend Request Cancelled");
-      set({ isLoading: false, error: null });
-    } catch (error) {
-      console.log(error);
-      notify("error", "Error Cancel Friend Request");
-      set({ isLoading: false, error: error as string });
+    } catch (error:any) {
+      notify("error", error?.message || "Error Cancel Friend Request");
     }
   },
   getMyFriends: async () => {
-    set({ isLoading: true, error: null });
     try {
       const userID = await getUserId();
       const { data, error } = await supabase
@@ -294,17 +291,14 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
           };
         }
       });
-      set({ isLoading: false, error: null });
       return friends;
     } catch (error) {
       console.log(error);
       notify("error", "Error Get My Friends");
-      set({ error: error as string, isLoading: false });
       return [];
     }
   },
   unFollow: async (friend_request_id: string) => {
-    set({ isLoading: true, error: null });
     try {
       const { error } = await supabase
         .from("friend_requests")
@@ -315,15 +309,11 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
       if (error) throw error;
 
       notify("success", "Friend UnFollowed");
-      set({ isLoading: false, error: null });
-    } catch (error) {
-      console.log(error);
-      notify("error", "Error UnFollow Friend");
-      set({ isLoading: false, error: error as string });
+    } catch (error:any) {
+      notify("error", error?.message || "Error UnFollow Friend");
     }
   },
   getProfileStats: async (userID: string) => {
-    set({ isLoading: true, error: null });
     try {
       // 1- عدد البوستات
       const { count: postsCount, error: postsError } = await supabase
@@ -342,14 +332,12 @@ export const useFriendsStore = create<IFriendsStore>((set) => ({
 
       if (friendsError) throw friendsError;
 
-      set({ isLoading: false, error: null });
       return {
         posts: postsCount ?? 0,
         friends: friendsCount ?? 0,
       };
     } catch (error) {
       console.error(error);
-      set({ error: (error as Error).message, isLoading: false });
       return { posts: 0, friends: 0 };
     }
   },

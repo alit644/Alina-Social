@@ -3,11 +3,13 @@ import PostCount from "@/components/profile/PostCount";
 import MAvatar from "@/components/shared/MAvatar";
 import { memo, useCallback, useMemo } from "react";
 import type { IProfile } from "@/interfaces";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFriendsStore } from "@/store/useFriends";
 import { useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "../ui/skeleton";
+import useAddFriend from "@/hooks/friends/use-add-friend";
+import useGetMyFriends from "@/hooks/friends/use-my-friends";
+import useUnFollow from "@/hooks/friends/use-unFollow";
+import useGetProfileStats from "@/hooks/friends/use-get-profileStatus";
 interface UserProfileCardProps {
   data?: Partial<IProfile>;
   isLoadingProfile: boolean;
@@ -17,30 +19,11 @@ const UserProfileCard = ({
   isLoadingProfile,
 }: UserProfileCardProps) => {
   const { userID } = useParams();
-  const { getProfileStats, getMyFriends, unFollow, addFriend, isLoading } =
-    useFriendsStore();
+  const { mutateAsync, isPending } = useAddFriend(userID || "");
   const { avatar_url = "", username = "", full_name = "", bio = "" } = data;
-  const queryClient = useQueryClient();
-  const { data: profileStats } = useQuery({
-    queryKey: ["profileStats", userID],
-    queryFn: async () => {
-      const data = await getProfileStats(userID || "");
-      return data;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5,
-  });
-  const { data: myFriends } = useQuery({
-    queryKey: ["myFriends", userID],
-    queryFn: async () => {
-      const data = await getMyFriends();
-      return data;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5,
-  });
+  const { data: profileStats } = useGetProfileStats(userID || "");
+  const { data: myFriends } = useGetMyFriends();
+
   const isFriend = useMemo(() => {
     return myFriends?.some((friend) => friend.id === userID);
   }, [myFriends, userID]);
@@ -49,19 +32,16 @@ const UserProfileCard = ({
     return myFriends?.find((friend) => friend.id === userID)?.friend_request_id;
   }, [myFriends, userID]);
 
+  const { mutateAsync: unFollowMutateAsync, isPending: unFollowIsPending } =
+    useUnFollow(friendRequestID || "");
   const handleUnFollow = useCallback(async () => {
-    await unFollow(friendRequestID || "");
-    queryClient.invalidateQueries({
-      queryKey: ["myFriends"],
-    });
-  }, [friendRequestID, unFollow, queryClient]);
+    await unFollowMutateAsync();
+  }, [unFollowMutateAsync]);
 
   const handleAddFriend = useCallback(async () => {
-    await addFriend(userID || "");
-    queryClient.invalidateQueries({
-      queryKey: ["myFriends"],
-    });
-  }, [userID, addFriend, queryClient]);
+    await mutateAsync();
+    
+  }, [mutateAsync]);
   return (
     <Card className=" shadow-none rounded-md m-0">
       {isLoadingProfile ? (
@@ -106,7 +86,7 @@ const UserProfileCard = ({
                   size={"lg"}
                   className="w-full md:w-[200px] border-[var(--danger-500)] text-[var(--danger-300)] hover:text-[var(--danger-300)]"
                   onClick={handleUnFollow}
-                  disabled={isLoading}
+                  disabled={unFollowIsPending}
                 >
                   Unfollow
                 </Button>
@@ -125,7 +105,7 @@ const UserProfileCard = ({
                   size={"lg"}
                   className="w-full md:w-[200px] dark:bg-[var(--primary-900)] dark:text-[var(--primary-50)]"
                   onClick={handleAddFriend}
-                  disabled={isLoading}
+                  disabled={isPending}
                 >
                   Follow
                 </Button>

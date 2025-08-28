@@ -9,7 +9,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Form, FormItem, FormControl, FormMessage } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addPostSchema } from "@/schema";
-import useCreatePost from "@/hooks/use-create-post";
+import useCreatePost from "@/hooks/posts/use-create-post";
 import notify from "@/helper/notify";
 interface IFormInput {
   postContent: string;

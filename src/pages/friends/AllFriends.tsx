@@ -1,26 +1,16 @@
 import FriendsCard from "@/components/shared/FriendsCard";
-import { useFriendsStore } from "@/store/useFriends";
-import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import NoResults from "@/components/shared/NoResults";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { IFriend } from "@/interfaces";
+import useGetFriends from "@/hooks/friends/use-get-friends";
+import { Button } from "@/components/ui/button";
 const AllFriends = () => {
-  const { getRandomFriends } = useFriendsStore();
+  const { data, isLoading , hasNextPage , fetchNextPage , isFetchingNextPage} = useGetFriends(6);
+  const infiniteDataFriends = data?.pages.flatMap((page) => page?.data ?? []);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["friends" , "all"],
-    queryFn: async () => {
-      const data = await getRandomFriends(10);
-      return data;
-    },
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5,
-  });
-
-  const renderFriend = data?.map((friend: IFriend) => {
+  const renderFriend = infiniteDataFriends?.map((friend: IFriend) => {
     return <FriendsCard key={friend.id} data={friend} />;
   });
   return (
@@ -35,11 +25,27 @@ const AllFriends = () => {
             <Skeleton className="h-[60px]" />
             <Skeleton className="h-[60px]" />
           </div>
-        ) : data?.length !== undefined && data?.length > 0 ? (
+        ) : infiniteDataFriends?.length !== undefined && infiniteDataFriends?.length > 0 ? (
           renderFriend
         ) : (
           <NoResults />
         )}
+         {hasNextPage && (
+                <Button
+                  className="w-full mt-4 dark:bg-gray-800 dark:text-white"
+                  onClick={() => fetchNextPage()}
+                >
+                  {isFetchingNextPage ? "Loading..." : "Load More"}
+                </Button>
+              )}
+              {!hasNextPage &&
+                !isLoading &&
+                infiniteDataFriends?.length !== undefined &&
+                infiniteDataFriends?.length > 0 && (
+                  <div className="text-center py-6 text-muted-foreground text-sm">
+                    You&apos;ve reached the end!
+                  </div>
+                )}
       </CardContent>
     </Card>
   );

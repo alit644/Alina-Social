@@ -14,7 +14,7 @@ const ProfileInfoCard = () => {
 
   const { getProfileStats } = useFriendsStore();
   const { data: profileStats } = useQuery({
-    queryKey: ["profileStats"],
+    queryKey: ["profile" , "profileStats", userProfile?.id],
     queryFn: async () => {
       const userID = await getUserId();
       const data = await getProfileStats(userID || "");

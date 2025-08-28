@@ -9,14 +9,21 @@ interface ICommentStore {
   error: string | null;
 
   addComment: (postID: string, data: { content: string }) => Promise<void>;
-  getComments: (postID: string) => Promise<IComment[]>;
+  getComments: (
+    postID: string,
+    page?: number,
+    pageSize?: number
+  ) => Promise<{
+    data: IComment[];
+    nextPage: number | undefined;
+    currentPage: number;
+  }>;
   deleteComment: (commentID: string) => Promise<void>;
 }
-export const useCommentStore = create<ICommentStore>((set) => ({
+export const useCommentStore = create<ICommentStore>(() => ({
   isLoading: false,
   error: null,
   addComment: async (postID: string, data: { content: string }) => {
-    set({ isLoading: true, error: null });
     try {
       const {
         data: { user },
@@ -29,32 +36,41 @@ export const useCommentStore = create<ICommentStore>((set) => ({
         content: data.content,
       });
       if (commentError) {
-        set({ error: "Error Add Comment", isLoading: false });
         notify("error", `${commentError?.message || "Something went wrong"}`);
         throw commentError;
       }
-      set({ isLoading: false, error: null });
       notify("success", "Comment Successfully Added");
-    } catch (error) {
-      console.log(error);
-      notify("error", "Something went wrong");
+    } catch (error: any) {
+      notify("error", error?.message || "Something went wrong");
+      throw error;
     }
   },
-  getComments: async (postID: string) => {
+  getComments: async (postID: string, page = 1, pageSize = 4) => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize - 1;
     try {
       const { data, error } = await supabase
         .from("comments")
         .select("*, profiles (id,avatar_url, full_name, username)")
-        .eq("post_id", postID);
+        .eq("post_id", postID)
+        .order("created_at", { ascending: false })
+        .range(start, end);
       if (error) throw error;
-      return data;
+      return {
+        data,
+        nextPage: data.length === pageSize ? page + 1 : undefined,
+        currentPage: page,
+      };
     } catch (error: any) {
       notify("error", error?.message || "Something went wrong");
-      return [];
+      return {
+        data: [],
+        nextPage: undefined,
+        currentPage: page,
+      };
     }
   },
   deleteComment: async (commentID: string) => {
-    set({ isLoading: true, error: null });
     try {
       const { error: deleteErr } = await supabase
         .from("comments")
@@ -62,12 +78,10 @@ export const useCommentStore = create<ICommentStore>((set) => ({
         .eq("id", commentID);
       if (deleteErr) {
         notify("error", deleteErr?.message || "Something went wrong");
-        set({ isLoading: false, error: "Error Delete Comment" });
         throw deleteErr;
       }
-      set({ isLoading: false, error: null });
       notify("success", "Comment Successfully Deleted");
-    } catch (error:any) {
+    } catch (error: any) {
       notify("error", error?.message || "Something went wrong");
     }
   },

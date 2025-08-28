@@ -1,61 +1,47 @@
-import { useFriendsStore } from "@/store/useFriends";
-import { useQuery } from "@tanstack/react-query";
 import type { IFriendRequest } from "@/interfaces";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import MAvatar from "@/components/shared/MAvatar";
 import { Button } from "@/components/ui/button";
 import { useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import NoResults from "@/components/shared/NoResults";
+import useIncomingRequests from "@/hooks/friends/use-incoming-requests";
+import useOutgoingRequests from "@/hooks/friends/use-outgoing-requests";
+import useConfirmRequest from "@/hooks/friends/use-confirm";
+import useRejectRequest from "@/hooks/friends/use-reject";
+import useCancelRequest from "@/hooks/friends/use-cancel";
 const IncomingRequests = () => {
-  const {
-    IncomingRequests,
-    confirmRequest,
-    rejectRequest,
-    outgoingRequests,
-    cancelRequest,
-    isLoading,
-  } = useFriendsStore();
-  const queryClient = useQueryClient();
-  const { data } = useQuery<IFriendRequest[]>({
-    queryKey: ["incoming-requests"],
-    queryFn: async () => {
-      const data = await IncomingRequests();
-      return data;
-    },
-  });
+  const { data, isLoading: isLoadingIncomingRequests } = useIncomingRequests();
+  const { data: outgoingData, isLoading: isLoadingOutgoingRequests } =
+    useOutgoingRequests();
+  const { mutateAsync, isPending: isLoadingConfirmRequest } =
+    useConfirmRequest();
+  const { mutateAsync: rejectMutate, isPending: isLoadinRejectRequests } =
+    useRejectRequest();
+  const { mutateAsync: cancelMutate, isPending: isLoadingCancelRequest } =
+    useCancelRequest();
 
-  const { data: outgoingData } = useQuery<IFriendRequest[]>({
-    queryKey: ["outgoing-requests"],
-    queryFn: async () => {
-      const data = await outgoingRequests();
-      return data;
-    },
-  });
+  const isLoading = isLoadingIncomingRequests || isLoadingOutgoingRequests;
 
   const handleAccept = useCallback(
     async (requestId: string) => {
-      await confirmRequest(requestId);
-      queryClient.invalidateQueries({ queryKey: ["incoming-requests"] });
+      await mutateAsync(requestId);
     },
-    [confirmRequest, queryClient]
+    [mutateAsync]
   );
 
   const handleReject = useCallback(
     async (requestId: string) => {
-      await rejectRequest(requestId);
-      queryClient.invalidateQueries({ queryKey: ["incoming-requests"] });
+      await rejectMutate(requestId);
     },
-    [rejectRequest, queryClient]
+    [rejectMutate]
   );
 
   const handleCancel = useCallback(
     async (requestId: string) => {
-      await cancelRequest(requestId);
-      queryClient.invalidateQueries({ queryKey: ["outgoing-requests"] });
+      await cancelMutate(requestId);
     },
-    [cancelRequest, queryClient]
+    [cancelMutate]
   );
 
   const renderData = data?.map((item: IFriendRequest) => (
@@ -81,7 +67,7 @@ const IncomingRequests = () => {
         <Button
           variant="default"
           onClick={() => handleAccept(item.id)}
-          disabled={isLoading}
+          disabled={isLoadingConfirmRequest}
         >
           Confirm
         </Button>
@@ -89,7 +75,7 @@ const IncomingRequests = () => {
           variant="ghost"
           className="bg-[var(--neutral-100)] hover:bg-[var(--neutral-200)] text-[var(--neutral-800)]"
           onClick={() => handleReject(item.id)}
-          disabled={isLoading}
+          disabled={isLoadinRejectRequests}
         >
           Delete
         </Button>
@@ -120,13 +106,15 @@ const IncomingRequests = () => {
           variant="outline"
           className="border-[var(--danger-200)] text-[var(--danger-500)]"
           onClick={() => handleCancel(item.id)}
-          disabled={isLoading}
+          disabled={isLoadingCancelRequest}
         >
           Cancel Request
         </Button>
       </div>
     </div>
   ));
+
+  if (isLoading) return <div>Loading..</div>;
 
   return (
     <div>

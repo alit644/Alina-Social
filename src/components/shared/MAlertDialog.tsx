@@ -11,7 +11,7 @@ import {
 import { useAlertDialogStore } from "@/store/useAlertDialog";
 import { Button } from "../ui/button";
 import { Loader } from "lucide-react";
-import useDeletePost from "@/store/use-delete-post";
+import useDeletePost from "@/hooks/posts/use-delete-post";
 const MAlertDialog = () => {
   const { alertPostId, setAlertPostId } = useAlertDialogStore();
   const {mutateAsync , isPending} = useDeletePost(alertPostId || "")
