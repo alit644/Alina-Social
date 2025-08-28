@@ -17,10 +17,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { addPostSchema } from "@/schema";
 import { Form, FormMessage } from "@/components/ui/form";
 import { Images, X } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { usePostStore } from "@/store/usePost";
 import PageLoader from "../ui/PageLoader";
-import { toast } from "sonner";
+import notify from "@/helper/notify";
+import useGetPost from "@/hooks/use-post";
+import useUpdatePost from "@/hooks/use-update-post";
 interface IFormInput {
   postContent: string;
   postImage?: File | string | null;
@@ -28,22 +28,13 @@ interface IFormInput {
 //TODO : عند اتمام علمبلة تحديث المنتج اعمل على تحديث المنتج في الواجهة
 export const MDialog = () => {
   const { openDialogId, setOpenDialogId } = useAlertDialogStore();
-  const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { getOnePost, isLoading, updatePost } = usePostStore();
   const form = useForm<IFormInput>({
     resolver: zodResolver(addPostSchema),
   });
 
   // get one post
-  const { data: onePostData, isFetching } = useQuery({
-    queryKey: ["post", "posts", openDialogId],
-    queryFn: async () => await getOnePost(openDialogId || ""),
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    refetchInterval: 5 * 60 * 1000, // 5 minutes
-    enabled: !!openDialogId,
-  });
+  const { data: onePostData, isFetching } = useGetPost(openDialogId || "");
   const postImage = form.watch("postImage");
   useEffect(() => {
     if (onePostData) {
@@ -58,37 +49,16 @@ export const MDialog = () => {
   }, [setOpenDialogId, form]);
 
   // update Mutation
-  const mutation = useMutation({
-    mutationFn: async (data: IFormInput) => {
-      await updatePost(openDialogId || "", {
-        content: data.postContent || "",
-        image_url: data.postImage,
-      });
-    },
-    onSuccess: () => {
-      onClose();
-      queryClient.setQueryData(["post", openDialogId], {
-        content: form.getValues("postContent"),
-        image_url: form.getValues("postImage"),
-      });
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Error Update Post", {
-        style: {
-          background: "var(--danger-300)",
-          border: "1px solid var(--danger-500)",
-          color: "#fff",
-        },
-        duration: 5000,
-      });
-    },
-  });
+  const mutation = useUpdatePost(openDialogId || "");
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    await mutation.mutateAsync(data);
-    onClose();
+    try {
+      await mutation.mutateAsync(data);
+      onClose();
+    } catch (error) {
+      notify("error", "Error Update Post");
+      throw error;
+    }
   };
 
   const handleAddImage = useCallback(() => {
@@ -187,8 +157,8 @@ export const MDialog = () => {
               <DialogClose asChild onClick={onClose}>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save changes"}
+              <Button type="submit" disabled={mutation.isPending}>
+                {mutation.isPending ? "Saving..." : "Save changes"}
               </Button>
             </DialogFooter>
           </form>

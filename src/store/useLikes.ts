@@ -1,138 +1,92 @@
-import notify from "@/helper/notify";
-import supabase from "@/supabase";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
+import type { IPost } from "@/interfaces";
 interface ILikeStore {
   likes: {
     [postID: string]: {
+      posts?: IPost[];
       isLiked: boolean;
       count: number;
     };
   };
+  error: string | null;
   resetLikes: () => void;
-  fetchLikes: (postID: string) => Promise<void>;
-  toggleLike: (postID: string, userID: string) => Promise<void>;
-  subscribeToLikes: (postID: string) => RealtimeChannel;
+  // toggleLike: (postID: string, userID: string) => Promise<void>;
+  // subscribeToLikes: () => RealtimeChannel;
 }
-export const useLikeStore = create<ILikeStore>((set, get) => ({
+export const useLikeStore = create<ILikeStore>((set) => ({
   likes: {},
-  resetLikes: () => set({ likes: {} }),
-  // Fetch likes
-  fetchLikes: async (postID: string) => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+  error: null,
+  resetLikes: () => set({ likes: {}, error: null }),
+  // toggleLike: async (postID: string) => {
+  //   const {
+  //     data: { user },
+  //   } = await supabase.auth.getUser();
 
-      // هل المستخدم الحالي عامل لايك؟
-      const { data: userLike } = await supabase
-        .from("likes")
-        .select("id")
-        .eq("post_id", postID)
-        .eq("user_id", user.id)
-        .maybeSingle();
+  //   const post = usePostStore
+  //     .getState()
+  //     .posts?.find((item) => item.id === postID);
+  //   if (!user || !post) return;
 
-      // كم عدد اللايكات على البوست؟
-      const { data: post } = await supabase
-        .from("posts")
-        .select("likes_count")
-        .eq("id", postID)
-        .single();
+  //   // جلب الحالة الحالية
+  //   const current = get().likes[postID] || {
+  //     isLiked: post.is_liked,
+  //     count: post.likes_count,
+  //   };
 
-      set((state) => ({
-        likes: {
-          ...state.likes,
-          [postID]: {
-            isLiked: !!userLike,
-            count: post?.likes_count || 0,
-          },
-        },
-      }));
-    } catch (error) {
-      console.log("error fetchLikes", error);
-    }
-  },
-  toggleLike: async (postID: string) => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
+  //   // Optimistic UI: تحديث الحالة مباشرة
+  //   set((state) => ({
+  //     likes: {
+  //       ...state.likes,
+  //       [postID]: {
+  //         ...current,
+  //         isLiked: !current.isLiked,
+  //         count: current.isLiked ? current.count - 1 : current.count + 1,
+  //         isLoading: true,
+  //       },
+  //     },
+  //   }));
 
-    const current = get().likes[postID] || { isLiked: false, count: 0 };
+  //   try {
+  //     if (current.isLiked) {
+  //       // حذف لايك
+  //       const { error } = await supabase.from("likes").delete().match({
+  //         post_id: postID,
+  //         user_id: user.id,
+  //       });
 
-    try {
-      if (current.isLiked) {
-        // حذف لايك المستخدم الحالي فقط
-        const { error } = await supabase
-          .from("likes")
-          .delete()
-          .eq("post_id", postID)
-          .eq("user_id", user.id);
+  //       if (error) throw error;
+  //     } else {
+  //       // إضافة لايك
+  //       const { error } = await supabase.from("likes").insert({
+  //         post_id: postID,
+  //         user_id: user.id,
+  //       });
 
-        if (error) throw error;
+  //       if (error) throw error;
+  //     }
 
-
-        set((state) => ({
-          likes: {
-            ...state.likes,
-            [postID]: {
-              isLiked: false,
-              count: Math.max(0, current.count - 1),
-            },
-          },
-        }));
-      } else {
-        // إضافة لايك للمستخدم الحالي
-        const { error } = await supabase.from("likes").insert({
-          post_id: postID,
-          user_id: user.id,
-        });
-
-        if (error) throw error;
-
-
-        set((state) => ({
-          likes: {
-            ...state.likes,
-            [postID]: {
-              isLiked: true,
-              count: current.count + 1,
-            },
-          },
-        }));
-      }
-    } catch (error) {
-      console.log("error toggleLike", error);
-      notify("error", "Something went wrong");
-    }
-  },
-
-  subscribeToLikes: (postID: string) => {
-    const channel = supabase.channel(`posts-changes-${postID}`);
-    channel.on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "posts",
-        filter: `id=eq.${postID}`,
-      },
-      (payload) => {
-        console.log("Change received:", payload);
-        const newLIkes = payload.new.likes_count;
-        set((state) => ({
-          likes: {
-            ...state.likes,
-            [postID]: {
-              isLiked: state.likes[postID]?.isLiked,
-              count: newLIkes,
-            },
-          },
-        }));
-      }
-    ).subscribe();
-
-    return channel;
-  },
+  //     // بعد نجاح العملية، إزالة isLoading
+  //     set((state) => ({
+  //       likes: {
+  //         ...state.likes,
+  //         [postID]: {
+  //           ...state.likes[postID],
+  //           isLoading: false,
+  //         },
+  //       },
+  //     }));
+  //   } catch (error: any) {
+  //     console.log("error toggleLike", error);
+  //     set((state) => ({
+  //       likes: {
+  //         ...state.likes,
+  //         [postID]: { ...current, isLoading: false },
+  //       },
+  //       error: error?.message || "Something went wrong",
+  //     }));
+  //     notify("error", error?.message || "Something went wrong");
+  //   }
+  // },
+  
 }));

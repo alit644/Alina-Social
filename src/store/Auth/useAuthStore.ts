@@ -50,31 +50,31 @@ export const useAuthStore = create<IAuthStore>((set) => ({
         notify("error", "Error", authError?.message || "Something went wrong");
         return;
       }
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: userData.user?.id,
-        email: data.email,
-        username:
-          userData.user?.user_metadata.username ||
-          data.email.split("@")[0] ||
-          data.username,
-        created_at: new Date(),
-      });
+      // const { error: profileError } = await supabase.from("profiles").insert({
+      //   id: userData.user?.id,
+      //   email: data.email,
+      //   username:
+      //     userData.user?.user_metadata.username ||
+      //     data.email.split("@")[0] ||
+      //     data.username,
+      //   created_at: new Date(),
+      // });
 
-      if (profileError) {
-        set({
-          isLoading: false,
-          error: profileError?.message || "Something went wrong",
-        });
-        notify(
-          "error",
-          "Error",
-          profileError?.message || "Something went wrong"
-        );
+      // if (profileError) {
+      //   set({
+      //     isLoading: false,
+      //     error: profileError?.message || "Something went wrong",
+      //   });
+      //   notify(
+      //     "error",
+      //     "Error",
+      //     profileError?.message || "Something went wrong"
+      //   );
 
-        return;
-      }
+      //   return;
+      // }
 
-      set({ isLoading: false, error: null });
+      set({ isLoading: false, error: null , user: userData.user });
       window.location.href = "/";
     } catch (error) {
       set({ isLoading: false, error: error as string });
@@ -88,7 +88,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
   signIn: async (data: ISignInData) => {
     try {
       set({ isLoading: true, error: null });
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: userData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
@@ -99,7 +99,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
         });
         notify("error", "Error", error?.message || "Something went wrong");
       } else {
-        set({ isLoading: false, error: null });
+        set({ isLoading: false, error: null , user: userData.user });
         window.location.href = "/";
       }
     } catch (error) {

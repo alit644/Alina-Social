@@ -5,33 +5,61 @@ import { useAuthStore } from "./Auth/useAuthStore";
 import supabase from "@/supabase";
 import notify from "@/helper/notify";
 import getUserId from "@/helper/getUserId";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 interface IUsePost {
   posts: IPost[] | undefined | null;
   isLoading: boolean;
   error: string | null;
+  likes: {
+    [postID: string]: {
+      posts?: IPost[];
+      isLiked: boolean;
+      count: number;
+    };
+  };
   createPost: (data: {
     content: string;
     image_url?: string | File;
   }) => Promise<{ content: string; image_url?: string | File } | undefined>;
-  getUserPosts: () => Promise<IPost[] | undefined>;
-  getAllPosts: (
-    page: number,
-    pageSize: number
-  ) => Promise<{ data: IPost[]; nextPage: number | undefined, currentPage: number } | undefined>;
+  getUserPosts: (
+    page?: number,
+    pageSize?: number
+  ) => Promise<
+    | { data: IPost[]; nextPage: number | undefined; currentPage: number }
+    | undefined
+  >;
+  getAllPostsRPC: (
+    page?: number,
+    pageSize?: number
+  ) => Promise<
+    | { data: IPost[]; nextPage: number | undefined; currentPage: number }
+    | undefined
+  >;
   deletePost: (postID: string) => Promise<void>;
   getOnePost: (postID: string) => Promise<IPost[] | undefined>;
   updatePost: (
     postID: string,
     data: { content: string; image_url?: string | File | null }
   ) => Promise<IPost | undefined>;
-  getUserPostById: (userID: string) => Promise<IPost[] | undefined>;
+  getUserPostById: (
+    userID: string,
+    page?: number,
+    pageSize?: number
+  ) => Promise<{
+    data: IPost[];
+    nextPage: number | undefined;
+    currentPage: number;
+  }>;
+  resetLikes: () => void;
+  subscribeToLikes: () => RealtimeChannel;
 }
 export const usePostStore = create<IUsePost>((set) => ({
   posts: [] as IPost[],
   isLoading: false,
   error: null,
+  likes: {},
+  resetLikes: () => set({ likes: {} }),
   createPost: async (data) => {
-    set({ isLoading: true, error: null });
     try {
       let publicUrl = data.image_url;
       if (data.image_url instanceof File) {
@@ -54,7 +82,7 @@ export const usePostStore = create<IUsePost>((set) => ({
         publicUrl = publicUrlData.publicUrl;
       }
 
-      const { data: postData, error } = await supabase
+      const { error } = await supabase
         .from("posts")
         .insert({
           content: data.content,
@@ -63,65 +91,71 @@ export const usePostStore = create<IUsePost>((set) => ({
         })
         .single();
       if (error) {
-        set({ error: "Error Create Post", isLoading: false });
         notify("error", error?.message || "Something went wrong");
         throw error;
       }
-
-      set({ posts: [postData], isLoading: false, error: null });
 
       notify("success", "Post Successfully Created");
       return data;
     } catch (error: any) {
       console.log(error);
-      set({ error: error as string, isLoading: false });
       notify("error", "Error Create Post");
     }
   },
   // get user posts (My Posts)
-  getUserPosts: async () => {
+  getUserPosts: async (page = 1, pageSize = 4) => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize - 1;
     try {
-     const userID = await getUserId()
+      const userID = await getUserId();
       const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("user_id", userID)
-        .limit(10)
-        .order("created_at", { ascending: false });
+        .rpc("get_posts_with_details", {
+          user_uuid: userID,
+          my_posts_only: true,
+        })
+        .range(start, end);
       if (error) {
         notify("error", error?.message || "Error Get User Posts");
         throw error;
       }
-      return data;
-    } catch (error) {
-      console.log(error)
-      notify("error", "Error Get User Posts");
+      if (data && Array.isArray(data)) {
+        return {
+          data,
+          nextPage: data.length === pageSize ? page + 1 : undefined,
+          currentPage: page,
+        };
+      }
+    } catch (error: any) {
+      notify("error", error?.message || "Error Get User Posts");
+      throw error;
     }
   },
-  getAllPosts: async (page = 1, pageSize = 4) => {
+  getAllPostsRPC: async (page = 1, pageSize = 4) => {
     const start = (page - 1) * pageSize;
-    const end = start + pageSize - 1; // Adjusted to be inclusive
-    set({ isLoading: true, error: null });
+    const end = start + pageSize - 1;
     try {
+      const userID = await getUserId();
+      if (!userID) return;
       const { data, error } = await supabase
-        .from("posts")
-        .select("*, profiles!fk_user (avatar_url, full_name, username)")
-        .order("created_at", { ascending: false })
+        .rpc("get_posts_with_details", {
+          user_uuid: userID,
+          my_posts_only: false,
+        })
         .range(start, end);
       if (error) {
-        set({ error: "Error Get All Posts", isLoading: false });
-        notify("error", error?.message || "Error Get All Posts");
-        throw error;
+        notify("error", error?.message || "Error Fetching Posts");
+        return undefined;
       }
-      set({ posts: data, isLoading: false, error: null });
-      return {
-        data,
-        nextPage: data.length === pageSize ? page + 1 : undefined,
-        currentPage: page,
-      };
-    } catch (error) {
-      set({ error: error as string, isLoading: false });
-      notify("error", "Error Get All Posts");
+      if (data && Array.isArray(data)) {
+        return {
+          data,
+          nextPage: data.length === pageSize ? page + 1 : undefined,
+          currentPage: page,
+        };
+      }
+    } catch (error: any) {
+      console.log(error);
+      notify("error", "Error Fetching Posts");
     }
   },
   deletePost: async (postID: string) => {
@@ -207,22 +241,84 @@ export const usePostStore = create<IUsePost>((set) => ({
       notify("error", "Error Update Post");
     }
   },
-  getUserPostById: async (postID: string) => {
+  getUserPostById: async (postID: string, page = 1, pageSize = 4) => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize - 1;
     try {
+      const userID = await getUserId();
       const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("user_id", postID)
-        .limit(10)
-        .order("created_at", { ascending: false });
+        .rpc("get_posts_with_details", {
+          user_uuid: userID,
+          target_user_id: postID,
+        })
+        .range(start, end);
       if (error) {
         notify("error", error?.message || "Error Get User Posts");
         throw error;
       }
-      return data;
-    } catch (error) {
-      console.log(error);
+      
+      return {
+        data: Array.isArray(data) ? data : [],
+        nextPage: Array.isArray(data) && data.length === pageSize ? page + 1 : undefined,
+        currentPage: page,
+      };
+    } catch {
       notify("error", "Error Get User Posts");
+      return {
+        data: [],
+        nextPage: undefined,
+        currentPage: page,
+      };
     }
   },
+  subscribeToLikes: () => {
+    const channel = supabase
+      .channel("likes-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "likes",
+        },
+        async (payload) => {
+          console.log("payload", payload);
+          const { post_id, user_id } =
+            (payload.new as { post_id?: string; user_id?: string }) ||
+            (payload.old as { post_id?: string; user_id?: string });
+
+          set((state) => {
+            const updatedPosts = (state.posts ?? []).map((post) => {
+              if (post.id === post_id) {
+                let newCount =
+                  typeof post.likes_count === "number" ? post.likes_count : 0;
+                let newIsLiked = post.is_liked;
+
+                if (payload.eventType === "INSERT") {
+                  newCount++;
+                  if (user_id === useAuthStore.getState().user?.id)
+                    newIsLiked = true;
+                } else if (payload.eventType === "DELETE") {
+                  newCount--;
+                  if (user_id === useAuthStore.getState().user?.id)
+                    newIsLiked = false;
+                }
+
+                return {
+                  ...post,
+                  likes_count: newCount,
+                  is_liked: newIsLiked,
+                };
+              }
+              return post;
+            });
+            return { posts: updatedPosts };
+          });
+        }
+      )
+      .subscribe();
+
+    return channel;
+  },
+  
 }));
