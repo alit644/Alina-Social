@@ -38,7 +38,8 @@ const PostFooter = ({
           variant="ghost"
           size="icon"
           title={isLike ? "Unlike" : "Like"}
-          aria-label="Like"
+          aria-label={isLike ? "Unlike" : "Like"}
+          aria-hidden={isLike ? "true" : "false"}
           onClick={() => {
             // toggleLike(postID, author_id);
             toggleLikeMut.mutate({ postID, wasLiked: isLike });
@@ -70,7 +71,7 @@ const PostFooter = ({
             </svg>
           )}{" "}
         </Button>
-        <p className="text-xs text-gray-500 dark:text-gray-300">
+        <p className="text-xs dark:text-[var(--neutral-400)] text-[var(--neutral-500)]">
           {likes_count}
         </p>
       </div>

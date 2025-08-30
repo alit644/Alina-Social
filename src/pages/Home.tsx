@@ -11,11 +11,8 @@ import useGetAllPosts from "@/hooks/posts/use-all-posts";
 const Home = () => {
   //TODO: search user 11 part(four) Realtime
   //!=====================================
-  //TODO: Message 12 part(five) Realtime
-  //!=====================================
   //TODO: svg تعامل مع ايقونات  
   //!=====================================
-  //TODO: errors التعامل مع  
 
   useEffect(() => {
     const channel = usePostStore.getState().subscribeToLikes();

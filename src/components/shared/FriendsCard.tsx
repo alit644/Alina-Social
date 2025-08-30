@@ -25,7 +25,7 @@ const FriendsCard = ({ data }: { data: IFriend }) => {
           />
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold">{data.full_name} </h3>
-            <p className="text-sm text-gray-500">@{data.username}</p>
+            <p className="text-sm text-muted-foreground">@{data.username}</p>
           </div>
         </div>
       </Link>
@@ -37,7 +37,7 @@ const FriendsCard = ({ data }: { data: IFriend }) => {
           onClick={handleAddFriend}
           disabled={isPending}
         >
-          <Plus className="h-5 w-5 text-[var(--neutral-500)] hover:text-[var(--primary-900)]" />
+          <Plus className="h-5 w-5 text-[var(--neutral-500)] dark:text-[var(--neutral-800)] hover:text-[var(--primary-900)]" />
         </Button>
       </div>
     </article>

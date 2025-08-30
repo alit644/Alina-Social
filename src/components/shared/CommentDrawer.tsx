@@ -52,7 +52,7 @@ const CommentDrawer = () => {
   return (
     <Drawer open={openCommentDrawerId !== null} onOpenChange={onClose}>
       <DrawerContent>
-        <div className="mx-auto mb-16 w-full max-w-md sm:max-w-[500px] md:max-w-[700px] relative h-[100vh] md:h-[75vh] overflow-y-auto">
+        <div className="mx-auto  mb-16 w-full max-w-md sm:max-w-[500px] md:max-w-[700px] relative h-[100vh] md:h-[75vh] overflow-y-auto">
           <DrawerHeader>
             <DrawerTitle>Comments</DrawerTitle>
           </DrawerHeader>

@@ -14,6 +14,7 @@ import useFetchMessages from "@/hooks/messages/use-fetch-messages";
 import PageLoader from "@/components/ui/PageLoader";
 import { useEffect, useRef } from "react";
 import supabase from "@/supabase";
+import ErrorMessage from "@/components/error/ErrorMessage";
 const MessageContent = () => {
   const { conversationId } = useParams();
   const queryClient = useQueryClient();
@@ -70,7 +71,7 @@ const MessageContent = () => {
       console.log(error);
     }
   };
-  const { data, isLoading } = useFetchMessages(conversationId || "");
+  const { data, isLoading , error } = useFetchMessages(conversationId || "");
   useEffect(() => {
    if (bottomRef.current) {
      bottomRef.current.scrollIntoView({ behavior: "smooth" });
@@ -79,7 +80,9 @@ const MessageContent = () => {
      };
    }
  }, [data]);
+ 
   if (isLoading) return <PageLoader />;
+  if (error) return <ErrorMessage />;
   return (
     <article className="w-full ">
       {/* messages content */}
@@ -120,7 +123,7 @@ const MessageContent = () => {
           })
         ) : (
           <div className="flex items-center justify-center h-full w-full">
-            <p className="text-center text-muted-foreground bg-gray-50 p-4 rounded-sm">
+            <p className="text-center text-muted-foreground bg-gray-50  dark:bg-background p-4 rounded-sm">
               No messages , start a conversation
             </p>
           </div>

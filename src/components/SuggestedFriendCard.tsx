@@ -11,6 +11,7 @@ import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
 import { Link } from "react-router";
 import useGetFriends from "@/hooks/friends/use-get-friends";
+import { memo } from "react";
 
 const SuggestedFriendCard = () => {
 
@@ -25,7 +26,7 @@ const SuggestedFriendCard = () => {
   return (
     <Card className="shadow-none rounded-md">
       <CardHeader className="border-b border-input">
-        <CardTitle>Suggested Friends</CardTitle>
+        <CardTitle className="logo">Suggested Friends</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -46,4 +47,4 @@ const SuggestedFriendCard = () => {
   );
 };
 
-export default SuggestedFriendCard;
+export default memo(SuggestedFriendCard);

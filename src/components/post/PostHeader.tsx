@@ -36,14 +36,14 @@ const PostHeader = ({
           />
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold">{name} </h3>
-            <p className="text-sm text-gray-500">@{author_name}</p>
+            <p className="text-sm text-muted-foreground">@{author_name}</p>
           </div>
         </div>
       </Link>
       {/* options */}
       <div className="flex flex-col items-end">
         {children}
-        <p className="text-[var(--neutral-400)]">
+        <p className="dark:text-[var(--neutral-400)] text-[var(--neutral-500)] ">
           {dayjs(createdAt).fromNow()}
         </p>
       </div>

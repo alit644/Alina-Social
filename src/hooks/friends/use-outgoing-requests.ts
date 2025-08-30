@@ -10,6 +10,9 @@ const useOutgoingRequests = () => {
       const data = await outgoingRequests();
       return data;
     },
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 2,
+    refetchInterval: 1000 * 60 * 2,
   });
 };
 export default useOutgoingRequests;

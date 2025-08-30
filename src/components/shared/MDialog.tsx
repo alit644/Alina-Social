@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAlertDialogStore } from "@/store/useAlertDialog";
-import { useCallback, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addPostSchema } from "@/schema";
@@ -26,7 +26,7 @@ interface IFormInput {
   postImage?: File | string | null;
 }
 //TODO : عند اتمام علمبلة تحديث المنتج اعمل على تحديث المنتج في الواجهة
-export const MDialog = () => {
+ const MDialog = () => {
   const { openDialogId, setOpenDialogId } = useAlertDialogStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm<IFormInput>({
@@ -167,3 +167,5 @@ export const MDialog = () => {
     </Dialog>
   );
 };
+
+export default memo(MDialog);

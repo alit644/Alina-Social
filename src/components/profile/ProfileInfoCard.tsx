@@ -14,7 +14,7 @@ const ProfileInfoCard = () => {
 
   const { getProfileStats } = useFriendsStore();
   const { data: profileStats } = useQuery({
-    queryKey: ["profile" , "profileStats", userProfile?.id],
+    queryKey: ["profile", "profileStats", userProfile?.id],
     queryFn: async () => {
       const userID = await getUserId();
       const data = await getProfileStats(userID || "");
@@ -31,13 +31,19 @@ const ProfileInfoCard = () => {
         variant="ghost"
         className="hidden sm:block text-[var(--neutral-600)]"
       >
-        <NavLink to={item.to} end>
+        <NavLink
+          to={item.to}
+          title={item.name}
+          aria-label={item.name}
+          end
+          className={({ isActive }) => (isActive ? "text-[var(--primary-900)] " : "")}
+        >
           {item.name}
         </NavLink>
       </Button>
       <Button variant="ghost" className="block sm:hidden" size="icon">
-        <NavLink to={item.to} end>
-          <item.icon className="h-6 w-6 text-[var(--neutral-400)] mx-auto" />
+        <NavLink to={item.to} end className={({ isActive }) => (isActive ? "text-[var(--primary-900)]  !important" : "")}>
+          <item.icon className="h-6 w-6  mx-auto" />
         </NavLink>
       </Button>
     </div>
@@ -58,19 +64,17 @@ const ProfileInfoCard = () => {
               <h3 className="text-lg font-semibold">
                 {userProfile?.full_name}
               </h3>
-              <p className="text-xs text-gray-500">@{userProfile?.username}</p>
+              <p className="text-xs text-muted-foreground">@{userProfile?.username}</p>
             </div>
           </div>
-          {/* bio */}
-
           {/* post count */}
           <PostCount data={profileStats || { posts: 0, friends: 0 }} />
         </section>
 
         {/* bio */}
         {userProfile?.bio && (
-          <div className="p2 mt-4">
-            <p className="text-xs text-gray-500">{userProfile?.bio}</p>
+          <div className="p2 mt-4 w-full sm:w-1/2">
+            <p className="text-xs text-muted-foreground">{userProfile?.bio}</p>
           </div>
         )}
       </CardContent>

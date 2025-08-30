@@ -20,6 +20,7 @@ import PageLoader from "@/components/ui/PageLoader";
 import ProfileLayout from "@/pages/Layout/ProfileLayout";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import PostSkeleton from "@/components/shared/PostSkeleton";
+import ErrorMessage from "@/components/error/ErrorMessage";
 const withSuspense = (Component: LazyExoticComponent<() => JSX.Element>) => (
   <Suspense fallback={<PageLoader />}>{<Component />}</Suspense>
 );
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute children={<RootLayout />} />,
+    errorElement: <ProtectedRoute children={<ErrorMessage />} />,
     children: [
       {
         path: "/",
@@ -39,6 +41,7 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         Component: ProfileLayout,
+        errorElement: <ProtectedRoute children={<ErrorMessage />} />,
         children: [
           {
             index: true,

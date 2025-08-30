@@ -5,13 +5,13 @@ import { useEffect } from "react";
 import PageLoader from "./components/ui/PageLoader";
 import { AuthContextProvider } from "./context/AuthProvider";
 import MAlertDialog from "@/components/shared/MAlertDialog";
-import { MDialog } from "@/components/shared/MDialog";
+import MDialog from "@/components/shared/MDialog";
 import CommentDrawer from "./components/shared/CommentDrawer";
 function App() {
   const { fetchUser, isLoading } = useAuthStore();
   useEffect(() => {
-   fetchUser();
-   // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) return <PageLoader />;

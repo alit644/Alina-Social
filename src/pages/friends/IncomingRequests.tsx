@@ -10,6 +10,7 @@ import useOutgoingRequests from "@/hooks/friends/use-outgoing-requests";
 import useConfirmRequest from "@/hooks/friends/use-confirm";
 import useRejectRequest from "@/hooks/friends/use-reject";
 import useCancelRequest from "@/hooks/friends/use-cancel";
+import { Skeleton } from "@/components/ui/skeleton";
 const IncomingRequests = () => {
   const { data, isLoading: isLoadingIncomingRequests } = useIncomingRequests();
   const { data: outgoingData, isLoading: isLoadingOutgoingRequests } =
@@ -67,6 +68,8 @@ const IncomingRequests = () => {
         <Button
           variant="default"
           onClick={() => handleAccept(item.id)}
+          title="Accept Request"
+          aria-label="Accept Request"
           disabled={isLoadingConfirmRequest}
         >
           Confirm
@@ -75,6 +78,8 @@ const IncomingRequests = () => {
           variant="ghost"
           className="bg-[var(--neutral-100)] hover:bg-[var(--neutral-200)] text-[var(--neutral-800)]"
           onClick={() => handleReject(item.id)}
+          title="Reject Request"
+          aria-label="Reject Request"
           disabled={isLoadinRejectRequests}
         >
           Delete
@@ -106,6 +111,8 @@ const IncomingRequests = () => {
           variant="outline"
           className="border-[var(--danger-200)] text-[var(--danger-500)]"
           onClick={() => handleCancel(item.id)}
+          title="Cancel Request"
+          aria-label="Cancel Request"
           disabled={isLoadingCancelRequest}
         >
           Cancel Request
@@ -114,7 +121,13 @@ const IncomingRequests = () => {
     </div>
   ));
 
-  if (isLoading) return <div>Loading..</div>;
+  if (isLoading)
+    return (
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-[180px]" />
+        <Skeleton className="h-[180px]" />
+      </div>
+    );
 
   return (
     <div>

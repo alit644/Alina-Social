@@ -79,12 +79,17 @@ const AddPostCard = () => {
           </FormItem>
           <CardFooter className="flex flex-col mt-2 ">
             <div className="flex justify-between items-center w-full gap-2 ">
-              <Button variant="ghost" type="button" onClick={handleAddImage}>
+              <Button variant="ghost" type="button" disabled={postMutation.isPending} title="Add Photo" aria-label="Add Photo"  onClick={handleAddImage}>
                 <Images className="h-4 w-4 mr-2" /> Add Photo
               </Button>
               <Button
+              variant={'default'}
                 size={"rounded"}
                 type="submit"
+                title="Post"
+                aria-label="Post"
+                className="bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[var(--primary-900)] hover:opacity-75"
+
                 disabled={postMutation.isPending}
               >
                 {postMutation.isPending && (
@@ -116,6 +121,8 @@ const AddPostCard = () => {
                 <Button
                   variant={"outline"}
                   type="button"
+                  title="Remove Image"
+                  aria-label="Remove Image"
                   onClick={() => form.setValue("postImage", undefined)}
                   className="  w-fit mt-2 "
                 >

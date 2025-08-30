@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {  z } from "zod";
 
 export const loginSchema = z.object({
   email: z.string().email({
@@ -56,7 +56,7 @@ export const profileSchema = z.object({
   bio: z
     .string()
     .min(3, { message: "Bio must be at least 3 characters long" })
-    .max(200, { message: "Bio must be at most 200 characters long" }),
+    .max(160, { message: "Bio must be at most 160 characters long" }),
   avatar_url: z.union([z.instanceof(File), z.string()]).optional(),
 });
 

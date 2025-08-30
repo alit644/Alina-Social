@@ -48,8 +48,8 @@ const AnimatedBackground = () => {
     <>
     <canvas ref={canvasRef} className="absolute inset-0"/>
       {/* Animated light sources */}
-      <div className="absolute -left-[50px] md:-left-[150px] -top-[50px] md:-top-[200px] h-[400px] w-[400px] animate-pulse rounded-full bg-fuchsia-800/40 blur-[100px] transition-all duration-700 will-change-auto" />
-      <div className="absolute -right-[50px] md:-right-[150px] -bottom-[50px] md:-bottom-[150px] h-[400px] w-[400px] animate-pulse rounded-full bg-blue-500/20 blur-[80px] transition-all duration-1000 delay-200 will-change-auto" />
+      <div className="absolute -left-[50px] md:-left-[150px] -top-[50px] md:-top-[200px] h-[200px] md:h-[400px] w-[200px] md:w-[400px] animate-pulse rounded-full bg-fuchsia-800/40 blur-[100px] transition-all duration-700 will-change-auto" />
+      <div className="absolute -right-[50px] md:-right-[150px] -bottom-[50px] md:-bottom-[150px] h-[200px] md:h-[400px] w-[200px] md:w-[400px] animate-pulse rounded-full bg-blue-500/20 blur-[80px] transition-all duration-1000 delay-200 will-change-auto" />
 
     </>
   );

@@ -33,7 +33,7 @@ const PostCard = ({
   postID,
   children,
   isLike,
-  likes_count
+  likes_count,
 }: IPostCard) => {
   // get user profile
   const { userProfile } = useAuthStore();
@@ -45,7 +45,7 @@ const PostCard = ({
         <PostHeader
           createdAt={createdAt}
           name={name}
-          author_name={''}
+          author_name={""}
           author_avatar={author_avatar}
           author_id={author_id}
           postID={postID}
@@ -56,7 +56,12 @@ const PostCard = ({
         <PostContent content={content} image_url={image_url} />
       </CardContent>
       <CardFooter className="flex flex-col">
-        <PostFooter postID={postID || ""} author_id={author_id || ""} isLike={isLike || false} likes_count={likes_count || 0}/>
+        <PostFooter
+          postID={postID || ""}
+          author_id={author_id || ""}
+          isLike={isLike || false}
+          likes_count={likes_count || 0}
+        />
         <AddComment
           avatar={userProfile?.avatar_url || ""}
           name={userProfile?.full_name || ""}
