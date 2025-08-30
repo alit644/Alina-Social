@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/shared/MobileNav";
 import { Send } from "lucide-react";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { Link } from "react-router";
 const NavBar = () => {
   const { logout } = useAuthStore();
@@ -76,4 +76,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default memo(NavBar);

@@ -68,8 +68,8 @@ export interface IPost {
   author_name?: string;
   author_avatar?: string;
   author_id?: string;
-  is_liked? :boolean
-  likes_count?: number
+  is_liked?: boolean;
+  likes_count?: number;
   profiles?: {
     avatar_url: string;
     full_name: string;
@@ -148,5 +148,36 @@ export interface INotification {
     avatar_url: string;
     full_name: string;
     username: string;
+  };
+}
+
+export interface IConversation {
+  id: string;
+  created_at: string;
+  user1: {
+    id: string;
+    full_name?: string;
+    username?: string;
+    avatar_url?: string;
+  };
+  user2: {
+    id: string;
+    full_name?: string;
+    username?: string;
+    avatar_url?: string;
+  };
+}
+
+export interface IMessage {
+  id: string;
+  conversation_id: string;
+  created_at: string;
+  text: string;
+  sender_id: string;
+  sender?: {
+    id: string;
+    full_name: string;
+    username: string;
+    avatar_url: string;
   };
 }

@@ -1,5 +1,6 @@
 import { Alert, AlertDescription , AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { memo } from "react";
 interface IAlert {
  title: string;
  description: string;
@@ -17,4 +18,4 @@ const MAlert = ({title , description , variant = "default"}: IAlert) => {
  );
 }
 
-export default MAlert;
+export default memo(MAlert);

@@ -8,11 +8,11 @@ import MAlertDialog from "@/components/shared/MAlertDialog";
 import { MDialog } from "@/components/shared/MDialog";
 import CommentDrawer from "./components/shared/CommentDrawer";
 function App() {
-  const { fetchUser, isLoading, getUserProfile } = useAuthStore();
+  const { fetchUser, isLoading } = useAuthStore();
   useEffect(() => {
-    fetchUser();
-    getUserProfile();
-  }, [fetchUser, getUserProfile]);
+   fetchUser();
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) return <PageLoader />;
 

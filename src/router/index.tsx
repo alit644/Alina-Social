@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
         Component: () => withSuspense(Messages),
         children: [
           {
-            index: true,
+            path: ":conversationId",
             Component: () => withSuspense(MessageContent),
           },
         ],

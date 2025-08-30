@@ -8,6 +8,7 @@ import { SIDEBAR_ITEMS } from "@/data";
 import MAvatar from "./MAvatar";
 import { NavLink } from "react-router";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
+import { memo } from "react";
 
 const AppSidebar = () => {
 const {userProfile}= useAuthStore()
@@ -49,7 +50,7 @@ const {userProfile}= useAuthStore()
             aria-label="banner"
           />
           <MAvatar
-            src={userProfile?.avatar_url}
+            src={`${userProfile?.avatar_url}`}
             name={userProfile?.username?.slice(0, 2).toUpperCase()}
             className="absolute bottom-[-20px] left-6 h-[50px] w-[50px]"
           />
@@ -65,4 +66,4 @@ const {userProfile}= useAuthStore()
     </div>
   );
 };
-export default AppSidebar;
+export default memo(AppSidebar);

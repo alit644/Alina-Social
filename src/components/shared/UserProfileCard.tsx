@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import PostCount from "@/components/profile/PostCount";
 import MAvatar from "@/components/shared/MAvatar";
 import { memo, useCallback, useMemo } from "react";
 import type { IProfile } from "@/interfaces";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "../ui/skeleton";
 import useAddFriend from "@/hooks/friends/use-add-friend";
 import useGetMyFriends from "@/hooks/friends/use-my-friends";
 import useUnFollow from "@/hooks/friends/use-unFollow";
 import useGetProfileStats from "@/hooks/friends/use-get-profileStatus";
+import { useMessagesStore } from "@/store/useMessages";
+import notify from "@/helper/notify";
 interface UserProfileCardProps {
   data?: Partial<IProfile>;
   isLoadingProfile: boolean;
@@ -19,6 +22,7 @@ const UserProfileCard = ({
   isLoadingProfile,
 }: UserProfileCardProps) => {
   const { userID } = useParams();
+  const navigate = useNavigate();
   const { mutateAsync, isPending } = useAddFriend(userID || "");
   const { avatar_url = "", username = "", full_name = "", bio = "" } = data;
   const { data: profileStats } = useGetProfileStats(userID || "");
@@ -40,8 +44,20 @@ const UserProfileCard = ({
 
   const handleAddFriend = useCallback(async () => {
     await mutateAsync();
-    
   }, [mutateAsync]);
+
+  // search for conversation
+  const { isConversation } = useMessagesStore();
+
+  const handleConversation = useCallback(async () => {
+    try {
+      await isConversation(userID || "", navigate);
+    } catch (error:any) {
+      notify("error", error?.message || "Something went wrong");
+      throw error;
+    }
+  }, [isConversation, userID, navigate]);
+
   return (
     <Card className=" shadow-none rounded-md m-0">
       {isLoadingProfile ? (
@@ -94,6 +110,7 @@ const UserProfileCard = ({
                   variant="outline"
                   size={"lg"}
                   className="w-full md:w-[200px]"
+                  onClick={handleConversation}
                 >
                   Message
                 </Button>
@@ -113,6 +130,7 @@ const UserProfileCard = ({
                   variant="outline"
                   size={"lg"}
                   className="w-full md:w-[200px]"
+                  onClick={handleConversation}
                 >
                   Message
                 </Button>

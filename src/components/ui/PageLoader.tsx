@@ -1,14 +1,17 @@
-import { Loader } from 'lucide-react';
-import Logo from '@/components/shared/Logo';
+import { LoaderCircle } from "lucide-react";
 
 const PageLoader = () => {
- return (
-  <div className="flex items-center gap-2 flex-col justify-center h-screen w-full">
-   <Logo/>
-   <Loader className="animate-spin" size={20} />
-   <p className="text-center text-lg text-muted-foreground">Loading...</p>
-  </div>
- );
-}
+  return (
+    <div className="flex items-center gap-2 flex-col justify-center h-screen w-full">
+      <LoaderCircle
+        className="animate-spin text-[var(--primary-900)]"
+        size={30}
+      />
+      <p className="text-center text-2xl text-muted-foreground animate-pulse">
+        Loading...
+      </p>
+    </div>
+  );
+};
 
 export default PageLoader;
