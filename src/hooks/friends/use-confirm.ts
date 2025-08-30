@@ -9,11 +9,15 @@ const useConfirmRequest = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["profile", "friends", "incoming-requests"],
+        exact: true,
       });
 
-      // refresh profile stats separately
       queryClient.invalidateQueries({
         queryKey: ["profile", "profileStats"],
+        exact: true,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["profile", "friends"],
         exact: true,
       });
     },

@@ -9,10 +9,15 @@ const useUnFollow = (friend_request_id: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["profile", "friends", "incoming-requests"],
+        exact: true,
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["profile", "profileStats",friend_request_id],
+        queryKey: ["profile", "profileStats"],
+        exact: true,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["profile", "friends"],
         exact: true,
       });
     },

@@ -15,7 +15,6 @@ interface IAuthStore {
   signIn: (data: ISignInData) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   fetchUser: () => Promise<void>;
-  getUserProfile: () => Promise<void>;
   logout: () => Promise<void>;
   fetchSession: () => Promise<void>;
 }
@@ -50,31 +49,8 @@ export const useAuthStore = create<IAuthStore>((set) => ({
         notify("error", "Error", authError?.message || "Something went wrong");
         return;
       }
-      // const { error: profileError } = await supabase.from("profiles").insert({
-      //   id: userData.user?.id,
-      //   email: data.email,
-      //   username:
-      //     userData.user?.user_metadata.username ||
-      //     data.email.split("@")[0] ||
-      //     data.username,
-      //   created_at: new Date(),
-      // });
 
-      // if (profileError) {
-      //   set({
-      //     isLoading: false,
-      //     error: profileError?.message || "Something went wrong",
-      //   });
-      //   notify(
-      //     "error",
-      //     "Error",
-      //     profileError?.message || "Something went wrong"
-      //   );
-
-      //   return;
-      // }
-
-      set({ isLoading: false, error: null , user: userData.user });
+      set({ isLoading: false, error: null, user: userData.user });
       window.location.href = "/";
     } catch (error) {
       set({ isLoading: false, error: error as string });
@@ -99,7 +75,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
         });
         notify("error", "Error", error?.message || "Something went wrong");
       } else {
-        set({ isLoading: false, error: null , user: userData.user });
+        set({ isLoading: false, error: null, user: userData.user });
         window.location.href = "/";
       }
     } catch (error) {
@@ -195,31 +171,38 @@ export const useAuthStore = create<IAuthStore>((set) => ({
 
       if (upsertError) throw upsertError;
 
-      set({ user, isLoading: false, error: null });
+      // get profile from db
+      const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+
+      set({ user, isLoading: false, error: null , userProfile: profile });
     } catch (err: any) {
       set({ error: err.message, isLoading: false });
       console.error("fetchUser error:", err);
     }
   },
   //! getUserProfile
-  getUserProfile: async () => {
-    set({ isLoading: true, error: null });
-    try {
-      const session = await supabase.auth.getSession();
-      if (!session?.data.session) throw new Error("No session");
-      const userID = session.data.session.user.id;
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userID)
-        .maybeSingle();
+  // getUserProfile: async () => {
+  //   set({ isLoading: true, error: null });
+  //   try {
+  //     const session = await supabase.auth.getSession();
+  //     if (!session?.data.session) throw new Error("No session");
+  //     const userID = session.data.session.user.id;
+  //     const { data, error } = await supabase
+  //       .from("profiles")
+  //       .select("*")
+  //       .eq("id", userID)
+  //       .maybeSingle();
 
-      if (error) throw error;
-      set({ userProfile: data, isLoading: false, error: null });
-    } catch (error) {
-      set({ error: error as string, isLoading: false });
-    }
-  },
+  //     if (error) throw error;
+  //     set({ userProfile: data, isLoading: false, error: null });
+  //   } catch (error) {
+  //     set({ error: error as string, isLoading: false });
+  //   }
+  // },
   //! logout
   logout: async () => {
     try {

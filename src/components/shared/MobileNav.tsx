@@ -12,7 +12,7 @@ import { useAuthStore } from "@/store/Auth/useAuthStore";
 export function MobileNav() {
   const { userProfile } = useAuthStore();
   return (
-    <div className="fixed bottom-0 left-0 right-0   bg-background border-t sm:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50  bg-background border-t sm:hidden">
       <NavigationMenu className="  w-full max-w-screen-sm ">
         <NavigationMenuList className="flex justify-between items-center p-2 max-w-full">
           <NavigationMenuItem>

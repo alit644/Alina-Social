@@ -10,8 +10,8 @@ const useGetProfileStats = (userID: string) => {
       return data;
     },
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5,
-    refetchInterval: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 2,
+    refetchInterval: 1000 * 60 * 2,
   });
 };
 export default useGetProfileStats;
