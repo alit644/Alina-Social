@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* تفعيل الـ dark mode عبر إضافة class="dark" على <html> */
 @custom-variant dark (&:is(.dark *));
 
 /* Typography */
@@ -23,7 +22,9 @@
 .H6 {
   @apply text-[14px]  font-medium;
 }
-
+.logo {
+ font-family: 'Pacifico', cursive;
+}
 /* — Body Paragraph */
 .p1 {
   @apply text-[16px]/[1.5] font-normal text-neutral-500 dark:text-neutral-300;
@@ -89,7 +90,7 @@
   --warning-500: #ffa500;
 
   /* Existing Variables */
-  --background: oklch(1 0 0);
+  --background: #FBFBFB;
   --foreground: oklch(0.145 0 0);
   --primary: var(--primary-900);
   --test: var(--neutral-900);
@@ -127,7 +128,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: #0a0a0a;
   --foreground: oklch(0.985 0 0);
   --primary: var(--primary-500);
   --primary-500: var(--primary-500);
@@ -215,10 +216,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground ;
+    font-family: 'Poppins', sans-serif;
   }
 }
 
-.active{
+.active {
  color: var(--neutral-900);
+ @apply bg-accent;
 }

@@ -1,4 +1,5 @@
 import { LoaderCircle } from "lucide-react";
+import { memo } from "react";
 
 const PageLoader = () => {
   return (
@@ -14,4 +15,4 @@ const PageLoader = () => {
   );
 };
 
-export default PageLoader;
+export default memo(PageLoader);

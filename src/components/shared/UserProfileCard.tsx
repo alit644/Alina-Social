@@ -76,7 +76,7 @@ const UserProfileCard = ({
                 />
                 <div className="flex flex-col">
                   <h3 className="text-lg font-semibold">{full_name}</h3>
-                  <p className="text-xs text-gray-500">@{username}</p>
+                  <p className="text-xs text-muted-foreground">@{username}</p>
                 </div>
               </div>
               {/* bio */}

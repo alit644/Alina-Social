@@ -16,7 +16,7 @@ const AllFriends = () => {
   return (
     <Card className="shadow-none rounded-md">
       <CardHeader>
-        <CardTitle className="H4">My Friends</CardTitle>
+        <CardTitle className="H4">All Friends</CardTitle>
       </CardHeader>
       <Separator />
       <CardContent className="px-2 sm:px-4">

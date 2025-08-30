@@ -26,8 +26,6 @@ const Register = () => {
     resolver: zodResolver(registerSchema),
   });
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-   
-
    await signUp(data);
 
   };
@@ -38,6 +36,7 @@ const Register = () => {
       <FormControl>
         <Input
           placeholder={input.placeholder}
+          aria-label={input.placeholder}
           type={input.type}
           className="h-10"
           {...form.register(input.name, input.validation)}
@@ -48,12 +47,12 @@ const Register = () => {
   ));
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-50 dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800 dark:to-slate-700">
+    <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-50 dark:bg-gradient-to-br dark:from-[#0a0a0a] dark:via-[#000001] dark:to-[#0a0a0a]">
       <AnimatedBackground />
 
       <div className="relative  flex flex-col h-full w-full items-center justify-center px-[20px] ">
         {/* content */}
-        <div className="w-full shadow-sm sm:w-[400px] flex flex-col items-center justify-center bg-white  border-input p-4  rounded-md dark:bg-slate-800">
+        <div className="w-full shadow-sm sm:w-[400px] flex flex-col items-center justify-center bg-white  border-input p-4  rounded-md dark:bg-card">
           <div className="w-full mb-6">
             <Logo />
           </div>
@@ -68,8 +67,9 @@ const Register = () => {
                 <Button
                   className="w-full h-10"
                   type="submit"
-                  variant={"neutral"}
+                  variant={"default"}
                   aria-label="Register"
+                  title="Register"
                   disabled={isLoading}
                 >
                  {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
@@ -82,8 +82,9 @@ const Register = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-primary hover:underline"
+              className="text-[var(--primary-900)] hover:underline"
               aria-label="Login"
+              title="Login"
             >
               Login
             </Link>

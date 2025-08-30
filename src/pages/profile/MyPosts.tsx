@@ -5,8 +5,8 @@ import { useAlertDialogStore } from "@/store/useAlertDialog";
 import { useCallback } from "react";
 import { MDropddownMenu } from "@/components/shared/MDropddownMenu";
 import PostSkeleton from "@/components/shared/PostSkeleton";
-import NoResults from "@/components/shared/NoResults";
 import useUserPosts from "@/hooks/posts/use-user-posts";
+import NoResults from "@/components/shared/NoResults";
 const MyPosts = () => {
   const { setAlertPostId } = useAlertDialogStore();
   const {
@@ -55,7 +55,7 @@ const MyPosts = () => {
   ));
 
   if (isLoading) return <PostSkeleton />;
-  if (error) return <div>{error.message}</div>;
+  if (error) return <NoResults />
   return (
     <>
       {renderUserPost?.length !== undefined && renderUserPost?.length > 0 ? (

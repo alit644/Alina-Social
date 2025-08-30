@@ -4,11 +4,11 @@ import { NavLink, Outlet } from "react-router";
 import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 const Settings = () => {
- const {logout} = useAuthStore()
- // handle logout
- const handleLogout = () => {
-  logout()
- }
+  const { logout } = useAuthStore();
+  // handle logout
+  const handleLogout = () => {
+    logout();
+  };
   return (
     <div className="">
       <Card className="shadow-none rounded-md gap-0 p-0 ">
@@ -24,7 +24,13 @@ const Settings = () => {
                 variant="ghost"
                 className="text-[var(--neutral-600)] w-full"
               >
-                <NavLink to={"/profile/settings"} end>
+                <NavLink
+                  to={"/profile/settings"}
+                  className={({ isActive }) =>
+                    isActive ? "text-[var(--primary-900)] " : ""
+                  }
+                  end
+                >
                   General
                 </NavLink>
               </Button>

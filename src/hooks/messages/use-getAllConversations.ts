@@ -7,6 +7,9 @@ const useGetAllMyConversations = () => {
   return useQuery<IConversation[]>({
     queryKey: ["conversations"],
     queryFn: async () => await getAllMyConversations(),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 2,
+    refetchInterval: 1000 * 60 * 2,
   });
 };
 

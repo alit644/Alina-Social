@@ -6,7 +6,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "bg-[var(--primary-900)] hover:bg-[var(--primary-800)]  text-white shadow ",
         destructive:
           "bg-destructive text-white shadow-sm hover:bg-destructive/60",
         outline:
@@ -15,7 +15,7 @@ export const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        neutral: "bg-[var(--neutral-900)] text-[var(--neutral-50)] shadow-sm hover:bg-[var(--neutral-800)]/90",
+        neutral: "bg-[var(--neutral-900)] dark:bg-[var(--neutral-50)] dark:text-[var(--neutral-50)] shadow-sm hover:bg-[var(--neutral-800)]/90",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -24,7 +24,7 @@ export const buttonVariants = cva(
         icon: "h-9 w-9",
         full: "w-full px-4 py-2",
         fit: "w-fit px-4 py-2",
-        rounded: "h-9 px-5 py-2 rounded-full",
+        rounded: "h-9 px-5 py-2 rounded-full ",
         
       },
     },

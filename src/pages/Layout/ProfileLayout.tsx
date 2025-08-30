@@ -10,7 +10,7 @@ const ProfileLayout = () => {
   return (
     <div
       className="
-      mx-auto  bg-[#FBFBFB] dark:bg-[#1E1E1E] grid grid-cols-12 gap-[var(--gutter-mobile)] sm:gap-[var(--gutter-tablet)]"
+      mx-auto   grid grid-cols-12 gap-[var(--gutter-mobile)] sm:gap-[var(--gutter-tablet)]"
     >
       <div className="col-span-12">
         <ProfileInfoCard />

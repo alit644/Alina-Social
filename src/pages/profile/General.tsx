@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { useRef, useCallback, useEffect } from "react";
 import { Loader, X } from "lucide-react";
-import {  useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import PageLoader from "@/components/ui/PageLoader";
 import useUpdateProfile from "@/hooks/profile/use-update-profile";
 import useGetUserProfile from "@/hooks/profile/use-get-userProfile";
@@ -23,17 +23,19 @@ const General = () => {
   const form = useForm<IGeneral>();
   const inputRef = useRef<HTMLInputElement>(null);
   const { userProfile } = useAuthStore();
-  const {mutateAsync , isPending: updateProfileLoading} = useUpdateProfile()
+  const { mutateAsync, isPending: updateProfileLoading } = useUpdateProfile();
   const queryClient = useQueryClient();
   // get user profile
-  const { data: profileData, isLoading: profileLoading } = useGetUserProfile(userProfile?.id || "")
+  const { data: profileData, isLoading: profileLoading } = useGetUserProfile(
+    userProfile?.id || ""
+  );
   const onSubmit: SubmitHandler<IGeneral> = async (data) => {
     try {
       await mutateAsync(data);
       queryClient.invalidateQueries({ queryKey: ["profile", userProfile?.id] });
     } catch (error) {
       console.log(error);
-      throw error
+      throw error;
     }
   };
 
@@ -102,7 +104,7 @@ const General = () => {
                 size={"icon"}
                 type="button"
                 onClick={resetDefaultImage}
-                className="size-5 bg-gray-900 text-white absolute top-0 left-0"
+                className="size-5 bg-gray-900 text-white  absolute top-0 left-0"
               >
                 <X className="size-4" />
               </Button>
@@ -142,25 +144,28 @@ const General = () => {
               <Textarea
                 placeholder="Bio"
                 className="h-20"
+                maxLength={160}
                 {...form.register("bio")}
               />
             </FormControl>
             <FormMessage>{form.formState.errors.bio?.message}</FormMessage>
           </FormItem>
-              
+
           <Button
-            className="w-fit h-11"
+            className="w-fit h-11 mb-20 sm:mb-0"
             type="submit"
-            variant={"neutral"}
+            variant={"default"}
             aria-label="Login"
             disabled={
-             updateProfileLoading ||
+              updateProfileLoading ||
               form.formState.isSubmitting ||
               !form.formState.isDirty
             }
             title={!form.formState.isDirty ? "No changes to save" : undefined}
           >
-            {updateProfileLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+            {updateProfileLoading && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
             {form.formState.isDirty ? "Save Changes" : "No changes to save"}
           </Button>
         </form>

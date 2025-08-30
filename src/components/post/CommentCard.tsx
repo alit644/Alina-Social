@@ -32,13 +32,13 @@ const CommentCard = ({
   }, [commentID, mutateAsync]);
 
   return (
-    <Card className="w-full bg-muted rounded-md shadow-none border-0 p-4 mt-4">
+    <Card className="w-full rounded-md shadow-none border-0 p-4 mt-4">
       <div className={`flex items-center gap-2 justify-between`}>
         <div className="flex items-center gap-2 ">
           <MAvatar src={avatar} name={name} className="size-[50px]" />
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold">{name} </h3>
-            <p className="text-sm text-gray-500">{"@" + userName}</p>
+            <p className="text-sm text-muted-foreground">{"@" + userName}</p>
           </div>
         </div>
         <div className="flex items-center gap-0.5">
@@ -55,7 +55,7 @@ const CommentCard = ({
             </Button>
           )}
           {/* time */}
-          <p className="text-[var(--neutral-500)]">
+          <p className="dark:text-[var(--neutral-400)] text-[var(--neutral-500)]">
             {dayjs(createdAt).fromNow()}
           </p>
         </div>

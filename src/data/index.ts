@@ -1,9 +1,9 @@
 import type { IGeneralInput, ILoginInput, IRegisterInput } from "@/interfaces";
 import {
   Bell,
-  Bookmark,
   Home,
   LayoutGrid,
+  Search,
   Send,
   Settings,
   User,
@@ -146,16 +146,45 @@ export const PROFILE_ITEMS = [
     icon: User,
     to: "/friends/incoming-requests",
   },
-  {
-    id: "saved",
-    name: "Saved Posts",
-    icon: Bookmark,
-    to: "/profile/saved-post",
-  },
+  
   {
     id: "settings",
     name: "Settings",
     icon: Settings,
     to: "/profile/settings",
+  },
+];
+
+export const NAVBAR_ITEMS = [
+  {
+    id: "home",
+    name: "Home",
+    icon: Home,
+    to: "/",
+  },
+  
+  {
+    id: "messages",
+    name: "Messages",
+    icon: Send,
+    to: "/messages",
+  },
+  {
+    id: "search",
+    name: "Search",
+    icon: Search,
+    to: "/search",
+  },
+  {
+    id: "friends",
+    name: "Friends",
+    icon: User,
+    to: "/all-friends",
+  },
+  {
+    id: "notifications",
+    name: "Notifications",
+    icon: Bell,
+    to: "/notifications",
   },
 ];

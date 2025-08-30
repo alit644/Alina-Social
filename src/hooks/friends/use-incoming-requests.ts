@@ -9,7 +9,11 @@ const useIncomingRequests = () => {
     queryFn: async () => {
       const data = await IncomingRequests();
       return data;
+
     },
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 2,
+    refetchInterval: 1000 * 60 * 2,
   });
 };
 
