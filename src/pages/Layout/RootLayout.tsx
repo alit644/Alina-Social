@@ -17,6 +17,7 @@ const RootLayout = () => {
     "/profile/settings",
     "/messages",
     "/all-friends",
+    "/search",
     username,
   ].includes(location.pathname);
 

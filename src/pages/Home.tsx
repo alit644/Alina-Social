@@ -9,10 +9,6 @@ import { useEffect } from "react";
 import supabase from "@/supabase";
 import useGetAllPosts from "@/hooks/posts/use-all-posts";
 const Home = () => {
-  //TODO: search user 11 part(four) Realtime
-  //!=====================================
-  //TODO: svg تعامل مع ايقونات  
-  //!=====================================
 
   useEffect(() => {
     const channel = usePostStore.getState().subscribeToLikes();

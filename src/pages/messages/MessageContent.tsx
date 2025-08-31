@@ -111,7 +111,7 @@ const MessageContent = () => {
                 <div
                   className={`px-3 py-2 flex flex-col gap-1 rounded-lg max-w-[70%] mb-2 ${
                     isMe
-                      ? "bg-[var(--primary-800)] text-white rounded-br-none"
+                      ? "bg-[var(--primary-900)] text-white rounded-br-none"
                       : "bg-gray-200 text-black rounded-bl-none"
                   }`}
                 >

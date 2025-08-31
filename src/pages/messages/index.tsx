@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import NoResults from "@/components/shared/NoResults";
 const Index = () => {
   const pathname = useLocation();
   const isMobile = useIsMobile();
@@ -52,6 +53,7 @@ const Index = () => {
     );
   });
 
+
   return (
     <section>
       <Card className="shadow-none rounded-md gap-0 p-0 mb-20 sm:mb-0">
@@ -89,9 +91,9 @@ const Index = () => {
             <div className="py-2 px-4">
               {isLoading ? (
                 <Skeleton className="h-[50px] w-full" />
-              ) : (
+              ) : data?.length !== undefined && data?.length > 0 ? (
                 renderLinks
-              )}{" "}
+              ) : <NoResults />}{" "}
             </div>
           </section>
 
