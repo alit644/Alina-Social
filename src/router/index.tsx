@@ -15,6 +15,7 @@ const IncomingRequests = lazy(() => import("@/pages/friends/IncomingRequests"));
 const Friends = lazy(() => import("@/pages/friends/Friends"));
 const AllFriends = lazy(() => import("@/pages/friends/AllFriends"));
 const UserProfile = lazy(() => import("@/pages/profile/UserProfile"));
+const SearchResult = lazy(() => import("@/pages/SearchResult"));
 import RootLayout from "@/pages/Layout/RootLayout";
 import PageLoader from "@/components/ui/PageLoader";
 import ProfileLayout from "@/pages/Layout/ProfileLayout";
@@ -101,6 +102,10 @@ export const router = createBrowserRouter([
         path: "/user/:userID",
         Component: () => withSuspense(UserProfile),
       },
+      {
+       path: '/search',
+       Component: () => withSuspense(SearchResult),
+      }
     ],
   },
   {

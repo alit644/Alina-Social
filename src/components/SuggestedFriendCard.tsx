@@ -14,7 +14,6 @@ import useGetFriends from "@/hooks/friends/use-get-friends";
 import { memo } from "react";
 
 const SuggestedFriendCard = () => {
-
   const { data, isLoading } = useGetFriends(6);
 
   const renderFriend = data?.pages?.map((page) => {

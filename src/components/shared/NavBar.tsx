@@ -1,12 +1,12 @@
 import Logo from "@/components/shared/Logo";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/shared/MobileNav";
-import { Search, Send } from "lucide-react";
+import {  Send } from "lucide-react";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import { memo, useCallback } from "react";
 import { Link } from "react-router";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import SearchQuery from "@/components/SearchQuery";
 const NavBar = () => {
   const { logout } = useAuthStore();
 
@@ -21,18 +21,7 @@ const NavBar = () => {
             <Logo />
           </Link>
           {/* Search */}
-          <div className="hidden sm:flex items-center gap-2 relative ">
-            <Input
-              placeholder="Search"
-              aria-label="Search"
-              className="h-10 w-[200px] sm:w-[300px] md:w-[400px] lg:w-[500px]   pl-10 shadow-none focus-visible:ring-1 focus-visible:ring-[var(--primary-500)]"
-            />
-
-            <Search
-              aria-label="Search"
-              className="w-6 h-6 absolute left-2 top-1/2 -translate-y-1/2 text-[var(--neutral-500)]"
-            />
-          </div>
+          <SearchQuery />
           <div className="flex items-center gap-1">  
             {/* Logout  */}
             <div className="hidden sm:flex items-center gap-1  ">
