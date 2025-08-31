@@ -16,7 +16,7 @@ export const AuthContextProvider = ({
      setLoading(false)
     });
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (_, session) => {
         setUser(session?.user ?? null);
         setLoading(false)
       }
