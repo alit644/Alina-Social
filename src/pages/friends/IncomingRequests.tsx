@@ -131,7 +131,7 @@ const IncomingRequests = () => {
 
   return (
     <div>
-      <section className="w-full">
+      <section className="w-full mb-20 sm:mb-4">
         <Card className="shadow-none rounded-md ">
           <CardHeader>
             {/* الطلبات المرسلة إليّ */}

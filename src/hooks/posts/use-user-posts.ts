@@ -7,7 +7,7 @@ const useUserPosts = () => {
   return useInfiniteQuery({
    queryKey: ["posts" , "my-posts"],
    queryFn: async ({ pageParam = 1 }) => {
-     const result = await getUserPosts(pageParam, 2);
+     const result = await getUserPosts(pageParam, 6);
      return result;
    },
    initialPageParam: 1,

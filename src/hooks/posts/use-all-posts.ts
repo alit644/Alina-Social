@@ -6,7 +6,7 @@ const useGetAllPosts = () => {
   return useInfiniteQuery({
     queryKey: ["posts", "all-posts"],
     queryFn: async ({ pageParam = 1 }) => {
-      const result = await getAllPostsRPC(pageParam, 2);
+      const result = await getAllPostsRPC(pageParam, 6);
       return result;
     },
     initialPageParam: 1,

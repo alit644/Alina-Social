@@ -4,12 +4,12 @@ import PostSkeleton from "@/components/shared/PostSkeleton";
 import type { IPost } from "@/interfaces";
 import { usePostStore } from "@/store/usePost";
 import NoResults from "@/components/shared/NoResults";
-import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import supabase from "@/supabase";
 import useGetAllPosts from "@/hooks/posts/use-all-posts";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver ";
+import {  Loader2 } from "lucide-react";
 const Home = () => {
-
   useEffect(() => {
     const channel = usePostStore.getState().subscribeToLikes();
     return () => {
@@ -24,10 +24,14 @@ const Home = () => {
     fetchNextPage: rpcFetchNextPage,
     isFetchingNextPage: rpcIsFetchingNextPage,
     hasNextPage: rpcHasNextPage,
-  } = useGetAllPosts()
+  } = useGetAllPosts();
 
   const rpcInfiniteDataPost = rpcInfiniteData?.pages.flatMap(
     (page) => page?.data ?? []
+  );
+  const loadMoreRef = useIntersectionObserver(
+    () => rpcFetchNextPage(),
+    rpcHasNextPage
   );
 
   const renderPost = rpcInfiniteDataPost?.map((post: IPost | undefined) => {
@@ -59,12 +63,17 @@ const Home = () => {
           <NoResults />
         )}
         {rpcHasNextPage && (
-          <Button
-            className="w-full mt-4 dark:bg-gray-800 dark:text-white"
-            onClick={() => rpcFetchNextPage()}
+          <div
+            ref={loadMoreRef}
+            className="h-10 flex justify-center items-center"
           >
-            {rpcIsFetchingNextPage ? "Loading..." : "Load More"}
-          </Button>
+            {rpcIsFetchingNextPage && (
+              <div className="flex items-center gap-2">
+                <Loader2 className="animate-spin w-5 h-5 text-[var(--primary-900)]" />
+                Loading...
+              </div>
+            )}
+          </div>
         )}
         {!rpcHasNextPage &&
           !rpcLoading &&

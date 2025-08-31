@@ -66,7 +66,7 @@ const CommentDrawer = () => {
               )}
               {hasNextPage && (
                 <Button
-                  className="w-full mt-4 dark:bg-gray-800 dark:text-white"
+                  className="w-full my-6 dark:bg-gray-800 dark:text-white"
                   onClick={() => fetchNextPage()}
                 >
                   {isFetchingNextPage ? "Loading..." : "Load More"}

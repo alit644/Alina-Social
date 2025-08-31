@@ -1,12 +1,13 @@
 import PostCard from "@/components/post/PostCard";
 import { Button } from "@/components/ui/button";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Loader2 } from "lucide-react";
 import { useAlertDialogStore } from "@/store/useAlertDialog";
 import { useCallback } from "react";
 import { MDropddownMenu } from "@/components/shared/MDropddownMenu";
 import PostSkeleton from "@/components/shared/PostSkeleton";
 import useUserPosts from "@/hooks/posts/use-user-posts";
 import NoResults from "@/components/shared/NoResults";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver ";
 const MyPosts = () => {
   const { setAlertPostId } = useAlertDialogStore();
   const {
@@ -25,6 +26,11 @@ const MyPosts = () => {
     [setAlertPostId]
   );
   const rpcInfiniteDataPost = data?.pages.flatMap((page) => page?.data ?? []);
+
+  const loadMoreRef = useIntersectionObserver(
+    () => fetchNextPage(),
+    hasNextPage
+  );
 
   if (data?.pages?.length === 0) return <NoResults />;
   const renderUserPost = rpcInfiniteDataPost?.map((post) => (
@@ -55,7 +61,7 @@ const MyPosts = () => {
   ));
 
   if (isLoading) return <PostSkeleton />;
-  if (error) return <NoResults />
+  if (error) return <NoResults />;
   return (
     <>
       {renderUserPost?.length !== undefined && renderUserPost?.length > 0 ? (
@@ -64,12 +70,17 @@ const MyPosts = () => {
         <NoResults />
       )}
       {hasNextPage && (
-        <Button
-          className="w-full mt-4 dark:bg-gray-800 dark:text-white"
-          onClick={() => fetchNextPage()}
+        <div
+          ref={loadMoreRef}
+          className="h-10 flex justify-center items-center"
         >
-          {isFetchingNextPage ? "Loading..." : "Load More"}
-        </Button>
+          {isFetchingNextPage && (
+            <div className="flex items-center gap-2">
+              <Loader2 className="animate-spin w-5 h-5 text-[var(--primary-900)]" />
+              Loading...
+            </div>
+          )}
+        </div>
       )}
       {!hasNextPage &&
         !isLoading &&
