@@ -1,4 +1,3 @@
-import React from 'react';
 import NoResults from '@/components/shared/NoResults';
 
 const SavedPost = () => {
