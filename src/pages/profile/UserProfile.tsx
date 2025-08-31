@@ -6,9 +6,10 @@ import type { IPost } from "@/interfaces";
 import PostSkeleton from "@/components/shared/PostSkeleton";
 import { useAuthStore } from "@/store/Auth/useAuthStore";
 import useUserPostById from "@/hooks/posts/use-user-post";
-import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import useGetProfileById from "@/hooks/profile/use-get-profileById";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver ";
+import { Loader2 } from "lucide-react";
 const UserProfile = () => {
   const { userID } = useParams();
   const navigate = useNavigate();
@@ -20,13 +21,26 @@ const UserProfile = () => {
     }
   }, [userProfile?.id, userID, navigate]);
 
+  const { data: profileData, isLoading: userPost } = useGetProfileById(
+    userID || ""
+  );
 
-  const { data: profileData, isLoading: userPost } = useGetProfileById(userID || "")
-
-  const { data: userPosts , hasNextPage , fetchNextPage , isFetchingNextPage , isLoading: userPostLoading } = useUserPostById(userID || "");
+  const {
+    data: userPosts,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading: userPostLoading,
+  } = useUserPostById(userID || "");
   const rpcInfiniteDataPost = userPosts?.pages.flatMap(
     (page) => page?.data ?? []
   );
+
+  const loadMoreRef = useIntersectionObserver(
+    () => fetchNextPage(),
+    hasNextPage
+  );
+
   const renderPost = rpcInfiniteDataPost?.map((post: IPost) => {
     return (
       <PostCard
@@ -43,7 +57,6 @@ const UserProfile = () => {
       />
     );
   });
-
 
   return (
     <div className="grid grid-cols-12 gap-4">
@@ -64,12 +77,17 @@ const UserProfile = () => {
           <NoResults />
         )}
         {hasNextPage && (
-          <Button
-            className="w-full mt-4 dark:bg-gray-800 dark:text-white"
-            onClick={() => fetchNextPage()}
+          <div
+            ref={loadMoreRef}
+            className="h-10 flex justify-center items-center"
           >
-            {isFetchingNextPage ? "Loading..." : "Load More"}
-          </Button>
+            {isFetchingNextPage && (
+              <div className="flex items-center gap-2">
+                <Loader2 className="animate-spin w-5 h-5 text-[var(--primary-900)]" />
+                Loading...
+              </div>
+            )}
+          </div>
         )}
         {!hasNextPage &&
           !userPostLoading &&

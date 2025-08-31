@@ -70,7 +70,7 @@ const General = () => {
 
   if (profileLoading) return <PageLoader />;
   return (
-    <section className="w-full space-y-4 mb-2">
+    <section className="w-full space-y-4  mb-2">
       <Form {...form}>
         <form
           className="w-full space-y-4"

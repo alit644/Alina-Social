@@ -10,7 +10,7 @@ const Settings = () => {
     logout();
   };
   return (
-    <div className="">
+    <div className="mb-20 sm:mb-4">
       <Card className="shadow-none rounded-md gap-0 p-0 ">
         <CardHeader className=" flex justify-start items-center py-4">
           <CardTitle>Settings</CardTitle>

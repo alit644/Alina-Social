@@ -36,7 +36,7 @@ const PostHeader = ({
           />
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold">{name} </h3>
-            <p className="text-sm text-muted-foreground">@{author_name}</p>
+            <p className="text-sm text-muted-foreground">{author_name}</p>
           </div>
         </div>
       </Link>

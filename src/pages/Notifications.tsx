@@ -25,7 +25,7 @@ const Notifications = () => {
   ));
 
   return (
-    <Card className="shadow-none rounded-md gap-0 p-0">
+    <Card className="shadow-none rounded-md gap-0 p-0  mb-20 sm:mb-0">
       <CardHeader className="py-4">
         <CardTitle>Notifications</CardTitle>
       </CardHeader>
