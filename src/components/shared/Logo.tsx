@@ -3,7 +3,7 @@ const Logo = () => {
     <div className="flex items-center justify-center gap-2">
       <img
         loading="lazy"
-        src="/images/Logomark.svg"
+        src="/Logomark.svg"
         alt="logo"
         title="logo"
         className="w-[30px] sm:w-[40px] h-[30px] sm:h-[40px]"
