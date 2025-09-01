@@ -93,7 +93,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
         await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: "http://localhost:5173/",
+            redirectTo: "https://alina-social.vercel.app/",
           },
         });
       if (authError) {
@@ -117,11 +117,11 @@ export const useAuthStore = create<IAuthStore>((set) => ({
       if (event === "SIGNED_IN" && session?.user) {
         try {
           const { error } = await supabase.from("profiles").upsert({
-            id: session.user.id, // نفس id تبع auth
+            id: session.user.id, 
             email: session.user.email,
             username: session.user.user_metadata?.name,
             avatar_url: session.user.user_metadata?.picture,
-            updated_at: new Date(), // الأفضل يكون updated بدل created
+            updated_at: new Date(), 
           });
 
           if (error) {
