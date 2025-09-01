@@ -137,10 +137,10 @@ interface IFormInput {
                             variant={"neutral"}
                             type="button"
                             size={"icon"}
-                            className="size-5 absolute top-[-10px] right-2"
+                            className="size-5 absolute top-[-10px] right-2 z-10"
                             onClick={() => form.setValue("postImage", null)}
                           >
-                            <X className="size-4 " />
+                            <X className="size-4 text-[var(--primary-500)] z-11" />
                           </Button>
                         )}
                       </>

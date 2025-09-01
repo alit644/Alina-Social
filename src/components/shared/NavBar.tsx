@@ -21,7 +21,7 @@ const NavBar = () => {
             <Logo />
           </Link>
           {/* Search */}
-          <SearchQuery />
+          <SearchQuery className="hidden sm:flex"/>
           <div className="flex items-center gap-1">  
             {/* Logout  */}
             <div className="hidden sm:flex items-center gap-1  ">
