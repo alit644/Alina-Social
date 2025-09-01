@@ -37,7 +37,9 @@ const SearchResult = () => {
         <CardHeader>
           <CardTitle>Search Result</CardTitle>
           {/* Mobile Search */}
-          {usMobile && <SearchQuery />}
+          <div className="hidden sm:block">
+            <SearchQuery />
+          </div>
         </CardHeader>
         <CardContent>
           {isLoading ? (
