@@ -162,13 +162,6 @@ export const NAVBAR_ITEMS = [
     icon: Home,
     to: "/",
   },
-  
-  {
-    id: "messages",
-    name: "Messages",
-    icon: Send,
-    to: "/messages",
-  },
   {
     id: "search",
     name: "Search",
