@@ -35,7 +35,7 @@ const SearchResult = () => {
         <CardHeader>
           <CardTitle>Search Result</CardTitle>
           {/* Mobile Search */}
-          <div className="hidden sm:block">
+          <div className="block sm:hidden">
             <SearchQuery />
           </div>
         </CardHeader>
