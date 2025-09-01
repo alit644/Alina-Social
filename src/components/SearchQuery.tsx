@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 import { useNavigate } from "react-router";
 
-const SearchQuery = () => {
+const SearchQuery = ({ className = "hidden sm:flex" }: { className?: string }) => {
   const [query, setQuery] = useState<string>("");
 
   const navigate = useNavigate();
@@ -21,12 +21,13 @@ const SearchQuery = () => {
     debouncedSearch(e.target.value);
   };
   return (
-    <div className="hidden sm:flex items-center gap-2 relative ">
+    <div className={`flex items-center gap-2 relative ${className}`}>
       <Input
+      id="search"
       type="search"
         placeholder="Search"
         aria-label="Search"
-        className="h-10 w-[200px] sm:w-[300px] md:w-[400px] lg:w-[500px]   pl-10 shadow-none focus-visible:ring-1 focus-visible:ring-[var(--primary-500)]"
+        className="h-10 w-full sm:w-[300px] md:w-[400px] lg:w-[500px]   pl-10 shadow-none focus-visible:ring-1 focus-visible:ring-[var(--primary-500)]"
         value={query}
         onChange={handleChange}
       />
@@ -39,4 +40,4 @@ const SearchQuery = () => {
   );
 };
 
-export default SearchQuery;
+export default memo(SearchQuery);
