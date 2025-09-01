@@ -5,7 +5,7 @@ export default function ErrorMessage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
      {/* git */}
-     <img loading="lazy" src="/public/images/gif.gif" alt="Oops, Not Found" width={'150px'} height={'150px'} className="object-contain mx-auto select-none pointer-events-none"/>
+     <img loading="lazy" src="/gif.gif" alt="Oops, Not Found" width={'150px'} height={'150px'} className="object-contain mx-auto select-none pointer-events-none"/>
       <h1 className="text-2xl font-bold">Oops, Not Found</h1>
       {/* Short description */}
       <p className="text-md md:text-lg text-gray-600 dark:text-gray-300 mt-4 max-w-lg">
