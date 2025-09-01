@@ -6,13 +6,11 @@ import NoResults from "@/components/shared/NoResults";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import notify from "@/helper/notify";
-import { useIsMobile } from "@/hooks/use-mobile";
 import SearchQuery from "@/components/SearchQuery";
 const SearchResult = () => {
   const [searchParams] = useSearchParams();
   const { getSearchQuery } = useSearchStore();
   const query = searchParams.get("query");
-  const usMobile = useIsMobile();
   const { data, isLoading, error } = useQuery({
     queryKey: ["search", query],
     queryFn: async () => {
